@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/screens/authentication/sign_in.dart';
+import 'package:instagram_clone/screens/authentication/sign_up.dart';
 
 class LoginSelection extends StatelessWidget {
 
@@ -31,7 +33,7 @@ class LoginSelection extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 220.0),
+            SizedBox(height: 175.0),
 
             Image.asset(
               "assets/images/instagram_typography.png",
@@ -56,7 +58,10 @@ class LoginSelection extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  print("Create new Account");
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
+                },
               ),
             ),
 
@@ -71,7 +76,13 @@ class LoginSelection extends StatelessWidget {
                   fontWeight: FontWeight.bold
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                print("Log In");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignIn()),
+                );
+              },
             ),
           ],
         )
