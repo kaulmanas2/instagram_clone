@@ -12,14 +12,14 @@ class _SignInState extends State<SignIn> {
 
   final List<String> languages = ["English (United States)", "Hindi"];
 
-  String username = "";
+  String email = "";
   String password = "";
   bool _obscureText = true;
   bool _isButtonEnabled = false;
 
   isEnabled() {
     setState(() {
-      if (username.isNotEmpty && password.isNotEmpty) {
+      if (email.isNotEmpty && password.isNotEmpty) {
         _isButtonEnabled = true;
       }
       else {
@@ -72,11 +72,11 @@ class _SignInState extends State<SignIn> {
                     child: TextFormField(
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
-                        labelText: "Phone number, email or username",
+                        labelText: "Email",
                       ),
                       onChanged: (val) {
                         setState(() {
-                          username = val.toString();
+                          email = val.toString();
                           isEnabled();
                         });
                       },
