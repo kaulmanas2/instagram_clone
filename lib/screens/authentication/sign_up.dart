@@ -86,12 +86,12 @@ class _SignUpState extends State<SignUp> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Password",
-                      suffixIcon: IconButton(
-                        icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
-                        onPressed: () {
+                      suffixIcon: GestureDetector(
+                        child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
+                        onTap: () {
                           setState(() => _obscureText = !_obscureText);
                         },
-                      ),
+                      )
                     ),
                     onChanged: (val) {
                       setState(() {
@@ -120,7 +120,12 @@ class _SignUpState extends State<SignUp> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
-                    onPressed: _isButtonEnabled ? () => print("Register") : null,
+                    onPressed: _isButtonEnabled
+                      ? () {
+                        print("$email $password");
+                        print("Register Button");
+                      }
+                      : null,
                   ),
                 ),
               ],

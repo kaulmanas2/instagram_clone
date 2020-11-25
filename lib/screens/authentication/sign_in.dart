@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/screens/authentication/sign_up.dart';
+import 'package:instagram_clone/screens/home/home.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -127,7 +128,12 @@ class _SignInState extends State<SignIn> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
                       ),
-                      onPressed: _isButtonEnabled ? () => print("Log In") : null,
+                      onPressed: _isButtonEnabled
+                        ? () {
+                          print("$email $password");
+                          print("Log In Button");
+                        }
+                        : null,
                     ),
                   ),
 
