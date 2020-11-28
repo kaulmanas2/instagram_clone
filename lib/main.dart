@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:instagram_clone/screens/authentication/sign_in.dart';
-import 'package:instagram_clone/screens/authentication/sign_up.dart';
 import 'package:instagram_clone/screens/wrapper.dart';
 import 'package:instagram_clone/services/auth.dart';
 import 'package:provider/provider.dart';

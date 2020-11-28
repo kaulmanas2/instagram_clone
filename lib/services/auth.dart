@@ -8,10 +8,6 @@ class AuthenticationService {
     return _firebaseAuth.authStateChanges();
   }
 
-  String get userEmail {
-    return _firebaseAuth.currentUser.email;
-  }
-
   Future signUpWithEmailAndPassword(String email, String password) async {
     try {
       UserCredential userCredential =await _firebaseAuth.createUserWithEmailAndPassword(
@@ -26,6 +22,20 @@ class AuthenticationService {
     }
   }
 
+  Future signInWithEmailAndPassword(String email, String password) async {
+    try {
+      UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password
+      );
+      return userCredential.user;
+    }
+    catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
   Future signOut() async {
     try {
       return await _firebaseAuth.signOut();
@@ -34,5 +44,9 @@ class AuthenticationService {
       print(e.toString());
       return null;
     }
+  }
+
+  String get userEmail {
+    return _firebaseAuth.currentUser.email;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/services/auth.dart';
 import 'package:instagram_clone/shared/loading.dart';
 
 class SignIn extends StatefulWidget {
@@ -14,12 +15,15 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
 
+  final AuthenticationService _authService = AuthenticationService();
+
   final List<String> languages = ["English (United States)", "Hindi"];
 
   String email = "";
   String password = "";
   bool _obscureText = true;
   bool _isButtonEnabled = false;
+  bool isLoading = false;
 
   isEnabled() {
     setState(() {
@@ -37,7 +41,7 @@ class _SignInState extends State<SignIn> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Container(
+        body: isLoading ? Loading() : Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -132,9 +136,18 @@ class _SignInState extends State<SignIn> {
                         borderRadius: BorderRadius.circular(5.0),
                       ),
                       onPressed: _isButtonEnabled
-                        ? () {
-                          print("$email $password");
-                          print("Log In Button");
+                        ? () async {
+                          setState(() {
+                            print("$email $password");
+                            isLoading = true;
+                          });
+                          dynamic result = await _authService.signInWithEmailAndPassword(email, password);
+                          if (result == null) {
+                            setState(() {
+                              print("Error Logging In");
+                              isLoading = false;
+                            });
+                          }
                         }
                         : null,
                     ),

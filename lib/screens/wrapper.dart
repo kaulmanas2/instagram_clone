@@ -24,7 +24,6 @@ class Wrapper extends StatelessWidget {
     else {
       print("Data for the user changed => $user");
       return LoginSelection();
-      // return SignUp();
     }
   }
 }
