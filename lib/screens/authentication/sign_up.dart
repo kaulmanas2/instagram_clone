@@ -1,19 +1,28 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-import 'package:instagram_clone/screens/authentication/sign_in.dart';
+import 'package:instagram_clone/services/auth.dart';
+import 'package:instagram_clone/shared/loading.dart';
 
 class SignUp extends StatefulWidget {
+
+  final Function switchView;
+  SignUp({this.switchView});
+
   @override
   _SignUpState createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
 
+  final AuthenticationService _authService = AuthenticationService();
+
   String email = "";
   String password = "";
   bool _obscureText = true;
   bool _isButtonEnabled = false;
+  bool isLoading = false;
+
+  String error = "";
 
   isEnabled() {
     setState(() {
@@ -46,7 +55,7 @@ class _SignUpState extends State<SignUp> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Column(
+        body: isLoading ? Loading() : Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
@@ -121,11 +130,29 @@ class _SignUpState extends State<SignUp> {
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                     onPressed: _isButtonEnabled
-                      ? () {
+                      ? () async {
                         print("$email $password");
-                        print("Register Button");
+                        setState(() => isLoading = true);
+                        dynamic result = await _authService.signUpWithEmailAndPassword(email, password);
+                        if (result == null) {
+                          setState(() {
+                            error = "Error in Registration";
+                            isLoading = false;
+                          });
+                        }
                       }
                       : null,
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Text(
+                    error,
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 15.0,
+                    ),
                   ),
                 ),
               ],
@@ -147,8 +174,11 @@ class _SignUpState extends State<SignUp> {
                               text: "Already have an account? ",
                               style: TextStyle(color: Colors.grey),
                               recognizer: TapGestureRecognizer()..onTap = () {
-                                print("Go get Sign Up");
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignIn()));
+                                setState(() {
+                                  print("Go get Sign In");
+                                  widget.switchView();
+                                });
+                                // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignIn()));
                               }
                             ),
                             TextSpan(
@@ -158,8 +188,11 @@ class _SignUpState extends State<SignUp> {
                                 fontWeight: FontWeight.bold,
                               ),
                               recognizer: TapGestureRecognizer()..onTap = () {
-                                print("Go get Log In");
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignIn()));
+                                setState(() {
+                                  print("Go get Sign In");
+                                  widget.switchView();
+                                });
+                                // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignIn()));
                               }
                             ),
                           ]

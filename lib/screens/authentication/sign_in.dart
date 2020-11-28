@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:instagram_clone/screens/authentication/sign_up.dart';
-import 'package:instagram_clone/screens/home/home.dart';
+import 'package:instagram_clone/shared/loading.dart';
 
 class SignIn extends StatefulWidget {
+
+  final Function switchView;
+  SignIn({this.switchView});
+
   @override
   _SignInState createState() => _SignInState();
 }
@@ -218,8 +221,11 @@ class _SignInState extends State<SignIn> {
                                   text: "Don't have an account? ",
                                   style: TextStyle(color: Colors.grey),
                                   recognizer: TapGestureRecognizer()..onTap = () {
-                                    print("Go get Sign Up");
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignUp()));
+                                    setState(() {
+                                      print("Go get Sign Up");
+                                      widget.switchView();
+                                    });
+                                    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignUp()));
                                   }
                               ),
                               TextSpan(
@@ -229,8 +235,11 @@ class _SignInState extends State<SignIn> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                   recognizer: TapGestureRecognizer()..onTap = () {
-                                    print("Go get Sign Up");
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignUp()));
+                                    setState(() {
+                                      print("Go get Sign Up");
+                                      widget.switchView();
+                                    });
+                                    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignUp()));
                                   }
                               ),
                             ]
