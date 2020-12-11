@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/screens/authentication/login_selection.dart';
 import 'package:instagram_clone/screens/authentication/sign_up.dart';
-import 'package:instagram_clone/screens/home/home.dart';
+import 'file:///C:/Users/VAUSE/FlutterProjects/instagram_clone/lib/screens/home.dart';
 import 'package:provider/provider.dart';
 
 class Wrapper extends StatelessWidget {
