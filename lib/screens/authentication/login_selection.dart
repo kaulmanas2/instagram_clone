@@ -48,10 +48,12 @@ class _LoginSelectionState extends State<LoginSelection> {
 
                 SizedBox(height: 175.0),
 
-                Image.asset(
-                  "assets/images/instagram_typography.png",
-                  height: 100.0,
-                  width: 200.0,
+                Text(
+                  "Instagram",
+                  style: TextStyle(
+                    fontFamily: "Billabong",
+                    fontSize: 70.0,
+                  ),
                 ),
 
                 SizedBox(height: 40.0),

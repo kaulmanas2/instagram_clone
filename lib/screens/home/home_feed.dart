@@ -18,7 +18,14 @@ class _HomeFeedState extends State<HomeFeed> {
         title: IconButton(
           icon: Padding(
             padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 5.0),
-            child: Image.asset("assets/images/instagram_typography.png"),
+            child: Text(
+              "Instagram",
+              style: TextStyle(
+                fontFamily: "Billabong",
+                color: Colors.black,
+                fontSize: 30.0
+              ),
+            ),
           ),
           onPressed: () => print("Go to top"),
           iconSize: 120.0,
@@ -36,7 +43,7 @@ class _HomeFeedState extends State<HomeFeed> {
           ),
           IconButton(
             icon: Icon(
-              FontAwesome5Brands.facebook_messenger,
+              Feather.send,
               color: Colors.black,
               size: 30.0,
             ),
@@ -45,23 +52,17 @@ class _HomeFeedState extends State<HomeFeed> {
         ],
       ),
       body: Container(
-        child: Column(
-          children: [
-            Divider(height: 1.0, color: Colors.grey),
-
-            Container(
-              child: RaisedButton(
-                child: Text("Log Out"),
-                onPressed: () async {
-                  dynamic result = await _authService.signOut();
-                  if (result == null) {
-                    print("Error in logging out");
-                  }
-                },
-              ),
-            ),
-            Text(_authService.userEmail),
-          ],
+        color: Colors.white,
+        child: Center(
+          child: RaisedButton(
+            child: Text("Log Out"),
+            onPressed: () async {
+              dynamic result = await _authService.signOut();
+              if (result == null) {
+                print("Error in logging out");
+              }
+            },
+          ),
         ),
       ),
     );

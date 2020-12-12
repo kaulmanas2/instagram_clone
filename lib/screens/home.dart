@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:instagram_clone/screens/home/home_feed.dart';
 import 'package:instagram_clone/screens/profile/profile_page.dart';
-import 'package:instagram_clone/services/auth.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -74,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                   backgroundImage: NetworkImage("https://images.pexels.com/photos/1933873/pexels-photo-1933873.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"),
                   radius: 15.0,
                 ),
-                label: "Profile"
+                label: "Profile",
             ),
           ],
           type: BottomNavigationBarType.fixed,

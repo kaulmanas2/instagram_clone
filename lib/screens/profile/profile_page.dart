@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:instagram_clone/services/auth.dart';
@@ -13,7 +12,9 @@ class _ProfilePageState extends State<ProfilePage> {
   final AuthenticationService _authService = AuthenticationService();
 
   bool isGridActive = true;
-  
+  int _followers = 0;
+  int _following = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,8 +35,17 @@ class _ProfilePageState extends State<ProfilePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
-              child: Text("test_profile"),
+            Container(
+              height: 60.0,
+              child: DrawerHeader(
+                child: Text(
+                  "test_profile",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ),
             ListTile(
               title: Text("Log out"),
@@ -95,7 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Container(
                                   padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
                                   child: Text(
-                                    "172",
+                                    "$_followers",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20.0
@@ -113,7 +123,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Container(
                                   padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
                                   child: Text(
-                                    "163",
+                                    "$_following",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20.0
@@ -322,7 +332,7 @@ Container listPosts() {
                       IconButton(
                         icon: Icon(
                           FontAwesome.send_o,
-                          size: 20.0,
+                          size: 25.0,
                         ),
                         onPressed: () => print("Send Post"),
                       ),
