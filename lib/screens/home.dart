@@ -12,25 +12,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   int currentIndex = 0;
+  int _currentPage = 0;
 
   var tabBarContent = <Widget>[
-    HomeFeed(),
+    HomeFeed(), // Text('Index 0: Home'),
     Text('Index 1: Reels'),
     Text('Index 2: Add Photo'),
     Text('Index 3: Likes'),
-    ProfilePage(),
+    ProfilePage(), // Text('Index 4: Profile'),
   ];
 
-  static const tabs = <BottomNavigationBarItem> [
-    // BottomNavigationBarItem(icon: Icon(Foundation.home, color: Colors.black), label: "Home"),
-    BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.black), label: "Home"),
-    BottomNavigationBarItem(icon: Icon(Icons.video_collection_outlined, color: Colors.black), label: "Reels"),
-    // BottomNavigationBarItem(icon: Icon(Ionicons.ios_add_circle_outline, color: Colors.black), label: "Add Pic"),
-    BottomNavigationBarItem(icon: Icon(Icons.add_a_photo, color: Colors.black), label: "Add Pic"),
-    // BottomNavigationBarItem(icon: Icon(AntDesign.hearto, color: Colors.black), label: "Liked"),
-    BottomNavigationBarItem(icon: Icon(Icons.ac_unit_rounded, color: Colors.black), label: "Liked"),
-    BottomNavigationBarItem(icon: Icon(Icons.person, color: Colors.black), label: "Profile"),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +33,50 @@ class _HomePageState extends State<HomePage> {
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: currentIndex,
-          items: tabs,
+          items: [
+            // BottomNavigationBarItem(icon: Icon(Foundation.home, color: Colors.black), label: "Home"),
+            BottomNavigationBarItem(
+              icon: Icon(
+                SimpleLineIcons.home,
+                size: 20.0,
+                color: (_currentPage == 0) ? Colors.black : Colors.grey[600],
+              ),
+              label: "Home"
+            ),
+
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.video_collection_outlined,
+                color: (_currentPage == 1) ? Colors.black : Colors.grey[600],
+              ),
+              label: "Reels"
+            ),
+
+            BottomNavigationBarItem(
+              icon: Icon(
+                Ionicons.ios_add_circle_outline,
+                size: 30.0,
+                color: (_currentPage == 2) ? Colors.black : Colors.grey[600],
+              ),
+              label: "Upload"
+            ),
+
+            BottomNavigationBarItem(
+              icon: Icon(
+                  AntDesign.hearto,
+                color: (_currentPage == 3) ? Colors.black : Colors.grey[600],
+              ),
+              label: "Likes"
+            ),
+
+            BottomNavigationBarItem(
+                icon: CircleAvatar(
+                  backgroundImage: NetworkImage("https://images.pexels.com/photos/1933873/pexels-photo-1933873.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"),
+                  radius: 15.0,
+                ),
+                label: "Profile"
+            ),
+          ],
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: false,
           showUnselectedLabels: false,
@@ -50,6 +84,7 @@ class _HomePageState extends State<HomePage> {
           onTap: (index) {
             setState(() {
               currentIndex = index;
+              _currentPage = index;
             });
           },
         ),

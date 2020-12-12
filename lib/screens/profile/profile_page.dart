@@ -18,7 +18,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(Feather.lock, color: Colors.black),
+        leading: Icon(Feather.lock, color: Colors.black, size: 20.0),
         title: Text(
           "test_profile",
           style: TextStyle(
@@ -27,29 +27,28 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         backgroundColor: Colors.white,
         elevation: 0.0,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Ionicons.ios_add,
-              color: Colors.black,
-              size: 30.0,
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
+
+      endDrawer: Drawer (
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              child: Text("test_profile"),
             ),
-            onPressed: () => print("search button"),
-          ),
-          IconButton(
-            icon: Icon(
-              FontAwesome.bars,
-              color: Colors.black,
-              size: 30.0,
+            ListTile(
+              title: Text("Log out"),
+              onTap: () async {
+                dynamic result = await _authService.signOut();
+                if (result == null) {
+                  print("Error in logging out");
+                }
+                Navigator.pop(context);
+              },
             ),
-            onPressed: () async {
-              dynamic result = await _authService.signOut();
-              if (result == null) {
-                print("Error in logging out");
-              }
-            }
-          ),
-        ],
+          ],
+        ),
       ),
 
       body: NestedScrollView(
