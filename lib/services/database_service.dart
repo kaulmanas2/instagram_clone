@@ -29,4 +29,8 @@ class DatabaseService {
       "following" : int.parse(following),
     });
   }
+
+  Stream<DocumentSnapshot> get personalUserData {
+    return userProfilesCollection.doc(uid).snapshots();
+  }
 }

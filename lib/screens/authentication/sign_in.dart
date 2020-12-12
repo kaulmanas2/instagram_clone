@@ -68,10 +68,16 @@ class _SignInState extends State<SignIn> {
 
               Column(
                 children: [
-                  Image.asset(
-                    "assets/images/instagram_typography.png",
-                    height: 100.0,
-                    width: 200.0,
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 15.0),
+                    child: Text(
+                      "Instagram",
+                      style: TextStyle(
+                          fontFamily: "Billabong",
+                          color: Colors.black,
+                          fontSize: 70.0
+                      ),
+                    ),
                   ),
 
                   Container(

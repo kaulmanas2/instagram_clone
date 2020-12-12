@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:instagram_clone/screens/profile/edit_profile.dart';
 import 'package:instagram_clone/services/auth.dart';
+import 'package:instagram_clone/services/database_service.dart';
+import 'package:instagram_clone/shared/loading.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -19,214 +22,237 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: Icon(Feather.lock, color: Colors.black, size: 20.0),
-        title: Text(
-          "test_profile",
-          style: TextStyle(
-            color: Colors.black,
-          ),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 1.0,
-        iconTheme: IconThemeData(color: Colors.black),
-      ),
-
-      endDrawer: Drawer (
-        child: Container(
-          color: Colors.white,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              Container(
-                height: 65.0,
-                child: DrawerHeader(
-                  child: Text(
-                    "test_profile",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+    return StreamBuilder<DocumentSnapshot>(
+      stream: DatabaseService(uid: _authService.uid).personalUserData,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          DocumentSnapshot dataSnapshot = snapshot.data;
+          return Scaffold(
+            appBar: AppBar(
+              leading: Icon(Feather.lock, color: Colors.black, size: 20.0),
+              title: Text(
+                dataSnapshot.data()["username"],
+                style: TextStyle(
+                  color: Colors.black,
                 ),
               ),
-              ListTile(
-                title: Text("Log out"),
-                onTap: () async {
-                  dynamic result = await _authService.signOut();
-                  if (result == null) {
-                    print("Error in logging out");
-                  }
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+              backgroundColor: Colors.white,
+              elevation: 1.0,
+              iconTheme: IconThemeData(color: Colors.black),
+            ),
 
-      body: NestedScrollView(
-        headerSliverBuilder: (context, value) {
-          return [
-            SliverToBoxAdapter(
+            endDrawer: Drawer(
               child: Container(
                 color: Colors.white,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: ListView(
+                  padding: EdgeInsets.zero,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(25.0),
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(profilePicURL),
-                            radius: 40.0,
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Column(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
-                                  child: Text(
-                                    "${posts.length}",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20.0
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 15.0),
-                                  child: Text("Posts"),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
-                                  child: Text(
-                                    "$_followers",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20.0
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 15.0),
-                                  child: Text("Followers"),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
-                                  child: Text(
-                                    "$_following",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20.0
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 15.0),
-                                  child: Text("Following"),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
                     Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20.0),
+                      height: 65.0,
+                      child: DrawerHeader(
                         child: Text(
-                          _authService.displayName ?? "",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15.0
-                          ),
-                        ),
-                    ),
-                    Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-                        child: Text("Bio")
-                    ),
-
-                    Container(
-                      padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 15.0),
-                      height: 50.0,
-                      width: double.infinity,
-                      child: OutlineButton(
-                        child: Text(
-                          "Edit Profile",
+                          dataSnapshot.data()["username"],
                           style: TextStyle(
                             color: Colors.black,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        onPressed: () async {
-                          await Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile()));
-                          setState(() {});
-                        },
                       ),
+                    ),
+                    ListTile(
+                      title: Text("Log out"),
+                      onTap: () async {
+                        dynamic result = await _authService.signOut();
+                        if (result == null) {
+                          print("Error in logging out");
+                        }
+                        Navigator.pop(context);
+                      },
                     ),
                   ],
                 ),
               ),
             ),
-          ];
-        },
 
-        body: Container(
-          alignment: Alignment.topCenter,
-          color: Colors.white,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.grid_on,
-                        color: isGridActive ? Colors.black : Colors.grey[600],
+            body: NestedScrollView(
+              headerSliverBuilder: (context, value) {
+                return [
+                  SliverToBoxAdapter(
+                    child: Container(
+                      color: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(25.0),
+                                child: CircleAvatar(
+                                  backgroundImage: NetworkImage(profilePicURL),
+                                  radius: 40.0,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Column(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 15.0, vertical: 5.0),
+                                        child: Text(
+                                          "${posts.length}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20.0
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 15.0),
+                                        child: Text("Posts"),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 15.0, vertical: 5.0),
+                                        child: Text(
+                                          "${dataSnapshot.data()["followers"]}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20.0
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 15.0),
+                                        child: Text("Followers"),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 15.0, vertical: 5.0),
+                                        child: Text(
+                                          "${dataSnapshot.data()["following"]}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20.0
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 15.0),
+                                        child: Text("Following"),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Text(
+                              _authService.displayName ?? "",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0
+                              ),
+                            ),
+                          ),
+                          Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 15.0),
+                              child: Text(
+                                dataSnapshot.data()["bio"] ?? "",
+                              ),
+                          ),
+
+                          Container(
+                            padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 15.0),
+                            height: 50.0,
+                            width: double.infinity,
+                            child: OutlineButton(
+                              child: Text(
+                                "Edit Profile",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              onPressed: () async {
+                                await Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) => EditProfile()));
+                                setState(() {});
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                      onPressed: () {
-                        setState(() => isGridActive = true);
-                      },
                     ),
                   ),
-                  Expanded(
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.list,
-                        color: isGridActive ? Colors.grey[600] : Colors.black,
-                      ),
-                      onPressed: () {
-                        setState(() => isGridActive = false);
-                      },
+                ];
+              },
+
+              body: Container(
+                alignment: Alignment.topCenter,
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.grid_on,
+                              color: isGridActive ? Colors.black : Colors
+                                  .grey[600],
+                            ),
+                            onPressed: () {
+                              setState(() => isGridActive = true);
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.list,
+                              color: isGridActive ? Colors.grey[600] : Colors
+                                  .black,
+                            ),
+                            onPressed: () {
+                              setState(() => isGridActive = false);
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                    Expanded(
+                      child: isGridActive ? gridPosts() : listPosts(),
+                    ),
+                  ],
+                ),
               ),
-              Expanded(
-                child: isGridActive ? gridPosts() : listPosts(),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        }
+        else {
+          return Loading();
+        }
+      }
     );
   }
 }
