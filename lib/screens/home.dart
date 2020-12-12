@@ -4,6 +4,7 @@ import 'package:instagram_clone/screens/home/home_feed.dart';
 import 'package:instagram_clone/screens/profile/profile_page.dart';
 
 class HomePage extends StatefulWidget {
+
   @override
   _HomePageState createState() => _HomePageState();
 }

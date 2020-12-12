@@ -22,7 +22,7 @@ class _EditProfileState extends State<EditProfile> {
   void changeProfileDetails() async {
     print("Change Name, Username, Bio");
     await _authService.setDisplayName(displayName);
-    Navigator.pop(context);
+    Navigator.pop(context, true);
   }
 
   @override

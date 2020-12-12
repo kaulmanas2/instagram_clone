@@ -34,32 +34,35 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
 
       endDrawer: Drawer (
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            Container(
-              height: 60.0,
-              child: DrawerHeader(
-                child: Text(
-                  "test_profile",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
+        child: Container(
+          color: Colors.white,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              Container(
+                height: 65.0,
+                child: DrawerHeader(
+                  child: Text(
+                    "test_profile",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
-            ListTile(
-              title: Text("Log out"),
-              onTap: () async {
-                dynamic result = await _authService.signOut();
-                if (result == null) {
-                  print("Error in logging out");
-                }
-                Navigator.pop(context);
-              },
-            ),
-          ],
+              ListTile(
+                title: Text("Log out"),
+                onTap: () async {
+                  dynamic result = await _authService.signOut();
+                  if (result == null) {
+                    print("Error in logging out");
+                  }
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
         ),
       ),
 
@@ -144,7 +147,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     Container(
                         padding: EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Text(_authService.displayName)
+                        child: Text(
+                          _authService.displayName,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15.0
+                          ),
+                        ),
                     ),
                     Container(
                         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
@@ -166,8 +175,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         ),
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile()));
+                        onPressed: () async {
+                          await Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile()));
+                          setState(() {});
                         },
                       ),
                     ),
