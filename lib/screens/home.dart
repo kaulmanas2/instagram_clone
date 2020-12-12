@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
 
             BottomNavigationBarItem(
               icon: Icon(
-                  AntDesign.hearto,
+                AntDesign.hearto,
                 color: (_currentPage == 3) ? Colors.black : Colors.grey[600],
               ),
               label: "Likes"

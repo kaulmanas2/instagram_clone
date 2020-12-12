@@ -66,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Padding(
                           padding: const EdgeInsets.all(25.0),
                           child: CircleAvatar(
-                            backgroundImage: NetworkImage("https://images.pexels.com/photos/1933873/pexels-photo-1933873.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"),
+                            backgroundImage: NetworkImage(profilePicURL),
                             radius: 40.0,
                           ),
                         ),
@@ -210,6 +210,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
+String profilePicURL = "https://images.pexels.com/photos/1933873/pexels-photo-1933873.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260";
 List<String> posts = [
   "https://images.pexels.com/photos/2273580/pexels-photo-2273580.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
   "https://images.pexels.com/photos/5845730/pexels-photo-5845730.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
@@ -259,10 +260,86 @@ Container listPosts() {
     child: ListView.builder(
       itemCount: posts.length,
       itemBuilder: (context, index) {
-        return Container(
-          padding: EdgeInsets.all(1.0),
-          // height: 120.0,
-          child: Image.network(posts[index], fit: BoxFit.cover, height: 500.0,),
+        return Column(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(profilePicURL),
+                        radius: 15.0,
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 15.0),
+                        child: Text(
+                          "test_profile",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    child: IconButton(
+                      icon: Icon(Icons.more_vert),
+                      onPressed: () => print("More clicked"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(1.0),
+              child: Image.network(posts[index], fit: BoxFit.cover, height: 500.0,),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          AntDesign.hearto,
+                          size: 25.0,
+                        ),
+                        onPressed: () => print("Like Post"),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Octicons.comment,
+                          size: 25.0,
+                        ),
+                        onPressed: () => print("Comment Post"),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          FontAwesome.send_o,
+                          size: 20.0,
+                        ),
+                        onPressed: () => print("Send Post"),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: IconButton(
+                    icon: Icon(Icons.save_alt),
+                    onPressed: () => print("More clicked"),
+                  ),
+                ),
+              ],
+            ),
+            Divider(thickness: 1.0),
+          ],
         );
       },
     ),
