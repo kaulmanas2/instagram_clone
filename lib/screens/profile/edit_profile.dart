@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/services/auth.dart';
+import 'package:instagram_clone/services/database_service.dart';
+import 'package:instagram_clone/shared/loading.dart';
 
 class EditProfile extends StatefulWidget {
   @override
@@ -15,19 +17,24 @@ class _EditProfileState extends State<EditProfile> {
   String username;
   String bio;
 
+  bool isLoading = false;
+
   void changeProfilePic(String displayName) {
     print("Change Profile Photo");
   }
 
   void changeProfileDetails() async {
     print("Change Name, Username, Bio");
+    setState(() => isLoading = true);
     await _authService.setDisplayName(displayName);
+    await DatabaseService(uid: _authService.uid).updateUserProfileData(username, bio);
+    setState(() => isLoading = false);
     Navigator.pop(context, true);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return isLoading ? Loading() :Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(
@@ -54,7 +61,9 @@ class _EditProfileState extends State<EditProfile> {
                 color: Colors.blue,
                 size: 35.0
             ),
-            onPressed: () => changeProfileDetails(),
+            onPressed: () {
+              changeProfileDetails();
+            },
           ),
         ],
       ),
@@ -109,7 +118,9 @@ class _EditProfileState extends State<EditProfile> {
                   decoration: InputDecoration(
                     labelText: "Username",
                   ),
-                  onChanged: (_) {},
+                  onChanged: (val) {
+                    username = val;
+                  },
                 ),
               ),
 
@@ -120,7 +131,9 @@ class _EditProfileState extends State<EditProfile> {
                   decoration: InputDecoration(
                     labelText: "Bio",
                   ),
-                  onChanged: (_) {},
+                  onChanged: (val) {
+                    bio = val;
+                  },
                 ),
               ),
             ],

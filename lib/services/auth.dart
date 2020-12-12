@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:instagram_clone/services/database_service.dart';
 
 class AuthenticationService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -10,10 +11,11 @@ class AuthenticationService {
 
   Future signUpWithEmailAndPassword(String email, String password) async {
     try {
-      UserCredential userCredential =await _firebaseAuth.createUserWithEmailAndPassword(
+      UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password
       );
+      await DatabaseService(uid: userCredential.user.uid).setUserProfileData("test_user");
       return userCredential.user;
     }
     catch (e) {
@@ -46,6 +48,10 @@ class AuthenticationService {
     }
   }
 
+  String get uid {
+    return _firebaseAuth.currentUser.uid;
+  }
+
   Future setDisplayName(String displayName) async {
     try {
       return await _firebaseAuth.currentUser.updateProfile(
@@ -58,11 +64,11 @@ class AuthenticationService {
     }
   }
 
-  String get userEmail {
-    return _firebaseAuth.currentUser.email;
-  }
-
   String get displayName {
     return _firebaseAuth.currentUser.displayName;
+  }
+
+  String get userEmail {
+    return _firebaseAuth.currentUser.email;
   }
 }

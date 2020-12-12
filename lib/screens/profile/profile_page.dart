@@ -148,7 +148,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Container(
                         padding: EdgeInsets.symmetric(horizontal: 20.0),
                         child: Text(
-                          _authService.displayName,
+                          _authService.displayName ?? "",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15.0

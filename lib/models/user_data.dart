@@ -2,19 +2,19 @@ class UserData {
   String uid;
   String email;
   String name;
-  String username;
   String photoURL;
+  String username;
   String bio;
-  String posts;
-  String followers;
-  String following;
+  int posts;
+  int followers;
+  int following;
 
   UserData({
     this.uid,
     this.email,
     this.name,
-    this.username,
     this.photoURL,
+    this.username,
     this.bio,
     this.posts,
     this.followers,
