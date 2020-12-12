@@ -46,7 +46,23 @@ class AuthenticationService {
     }
   }
 
+  Future setDisplayName(String displayName) async {
+    try {
+      return await _firebaseAuth.currentUser.updateProfile(
+        displayName: displayName,
+      );
+    }
+    catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
   String get userEmail {
     return _firebaseAuth.currentUser.email;
+  }
+
+  String get displayName {
+    return _firebaseAuth.currentUser.displayName;
   }
 }

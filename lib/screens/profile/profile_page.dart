@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:instagram_clone/screens/profile/edit_profile.dart';
 import 'package:instagram_clone/services/auth.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -27,7 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
         backgroundColor: Colors.white,
-        elevation: 0.0,
+        elevation: 1.0,
         iconTheme: IconThemeData(color: Colors.black),
       ),
 
@@ -142,7 +144,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     Container(
                         padding: EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Text(_authService.userEmail)
+                        child: Text(_authService.displayName)
                     ),
                     Container(
                         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
@@ -150,8 +152,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
 
                     Container(
-                      padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
-                      height: 35.0,
+                      padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 15.0),
+                      height: 50.0,
                       width: double.infinity,
                       child: OutlineButton(
                         child: Text(
@@ -165,7 +167,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           borderRadius: BorderRadius.circular(5.0),
                         ),
                         onPressed: () {
-                          print("Edit Profile");
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile()));
                         },
                       ),
                     ),
@@ -179,7 +181,6 @@ class _ProfilePageState extends State<ProfilePage> {
         body: Container(
           alignment: Alignment.topCenter,
           color: Colors.white,
-          padding: EdgeInsets.only(top: 25.0),
           child: Column(
             children: [
               Row(

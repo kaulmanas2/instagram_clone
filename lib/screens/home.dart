@@ -31,13 +31,14 @@ class _HomePageState extends State<HomePage> {
           child: tabBarContent[currentIndex],
         ),
         bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.white,
           currentIndex: currentIndex,
           items: [
             // BottomNavigationBarItem(icon: Icon(Foundation.home, color: Colors.black), label: "Home"),
             BottomNavigationBarItem(
               icon: Icon(
-                SimpleLineIcons.home,
-                size: 20.0,
+                AntDesign.home,
+                size: 25.0,
                 color: (_currentPage == 0) ? Colors.black : Colors.grey[600],
               ),
               label: "Home"
@@ -79,7 +80,7 @@ class _HomePageState extends State<HomePage> {
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: false,
           showUnselectedLabels: false,
-          elevation: 0.0,
+          elevation: 5.0,
           onTap: (index) {
             setState(() {
               currentIndex = index;

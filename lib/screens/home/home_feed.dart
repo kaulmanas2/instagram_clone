@@ -31,7 +31,7 @@ class _HomeFeedState extends State<HomeFeed> {
           iconSize: 120.0,
         ),
         backgroundColor: Colors.white,
-        elevation: 0.0,
+        elevation: 1.0,
         actions: [
           IconButton(
             icon: Icon(
