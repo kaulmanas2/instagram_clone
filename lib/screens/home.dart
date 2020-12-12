@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:instagram_clone/screens/home/home_feed.dart';
-import 'package:instagram_clone/screens/profile/my_profile.dart';
+import 'package:instagram_clone/screens/profile/profile_page.dart';
 import 'package:instagram_clone/services/auth.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
     Text('Index 1: Reels'),
     Text('Index 2: Add Photo'),
     Text('Index 3: Likes'),
-    MyProfile(),
+    ProfilePage(),
   ];
 
   static const tabs = <BottomNavigationBarItem> [
