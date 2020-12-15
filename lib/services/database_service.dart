@@ -10,7 +10,7 @@ class DatabaseService {
   Future setUserProfileData(String username) async {
     return await userProfilesCollection.doc(uid).set({
       "username": username,
-      "bio": null,
+      "bio": "",
       "posts" : 0,
       "followers" : 0,
       "following" : 0,

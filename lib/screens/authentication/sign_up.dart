@@ -16,6 +16,7 @@ class _SignUpState extends State<SignUp> {
 
   final AuthenticationService _authService = AuthenticationService();
 
+  String username = "";
   String email = "";
   String password = "";
   bool _obscureText = true;
@@ -26,7 +27,7 @@ class _SignUpState extends State<SignUp> {
 
   isEnabled() {
     setState(() {
-      if (email.isNotEmpty && password.isNotEmpty) {
+      if (email.isNotEmpty && password.isNotEmpty && username.isNotEmpty) {
         _isButtonEnabled = true;
       }
       else {
@@ -68,6 +69,26 @@ class _SignUpState extends State<SignUp> {
                     width: 300.0,
                   ),
                 ),
+
+                Container(
+                  padding: EdgeInsets.fromLTRB(25.0, 0.0, 25.0, 0.0),
+                  height: 50.0,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Username",
+                    ),
+                    onChanged: (val) {
+                      setState(() {
+                        username = val.toString();
+                        isEnabled();
+                      });
+                    },
+                  ),
+                ),
+
+                SizedBox(height: 15.0),
+
                 Container(
                   padding: EdgeInsets.fromLTRB(25.0, 0.0, 25.0, 0.0),
                   height: 50.0,
@@ -133,7 +154,7 @@ class _SignUpState extends State<SignUp> {
                       ? () async {
                         print("$email $password");
                         setState(() => isLoading = true);
-                        dynamic result = await _authService.signUpWithEmailAndPassword(email, password);
+                        dynamic result = await _authService.signUpWithEmailAndPassword(email, password, username);
                         if (result == null) {
                           setState(() {
                             error = "Error in Registration";

@@ -24,14 +24,14 @@ class _EditProfileState extends State<EditProfile> {
     print("Change Profile Photo");
   }
 
-  void changeProfileDetails() async {
-    print("Change Name, Username, Bio");
-    setState(() => isLoading = true);
-    await _authService.setDisplayName(displayName);
-    await DatabaseService(uid: _authService.uid).updateUserProfileData(username, bio);
-    setState(() => isLoading = false);
-    Navigator.pop(context, true);
-  }
+  // void changeProfileDetails() async {
+  //   print("Change Name, Username, Bio");
+  //   setState(() => isLoading = true);
+  //   await _authService.setDisplayName(displayName);
+  //   await DatabaseService(uid: _authService.uid).updateUserProfileData(username, bio);
+  //   setState(() => isLoading = false);
+  //   Navigator.pop(context, true);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +67,15 @@ class _EditProfileState extends State<EditProfile> {
                       color: Colors.blue,
                       size: 35.0
                   ),
-                  onPressed: () {
-                    changeProfileDetails();
+                  onPressed: () async {
+                    print("Change Name, Username, Bio");
+                    username = username ?? dataSnapshot.data()["username"];
+                    bio = bio ?? dataSnapshot.data()["bio"];
+                    // setState(() => isLoading = true);
+                    await _authService.setDisplayName(displayName);
+                    await DatabaseService(uid: _authService.uid).updateUserProfileData(username, bio);
+                    Navigator.pop(context, true);
+                    // setState(() => isLoading = false);
                   },
                 ),
               ],

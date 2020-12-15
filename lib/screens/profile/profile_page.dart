@@ -31,7 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
             appBar: AppBar(
               leading: Icon(Feather.lock, color: Colors.black, size: 20.0),
               title: Text(
-                dataSnapshot.data()["username"],
+                dataSnapshot.data()["username"] ?? "error",
                 style: TextStyle(
                   color: Colors.black,
                 ),
@@ -159,7 +159,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               )
                             ],
                           ),
-                          Container(
+
+                          (_authService.displayName == null || _authService.displayName == "") ? Container() : Container(
                             padding: EdgeInsets.symmetric(horizontal: 20.0),
                             child: Text(
                               _authService.displayName ?? "",
@@ -169,17 +170,17 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                           ),
-                          Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 15.0),
+
+                          (dataSnapshot.data()["bio"] == null || dataSnapshot.data()["bio"] == "") ? Container() : Container(
+                              padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
                               child: Text(
                                 dataSnapshot.data()["bio"] ?? "",
                               ),
                           ),
 
                           Container(
-                            padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 15.0),
-                            height: 50.0,
+                            padding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
+                            height: 65.0,
                             width: double.infinity,
                             child: OutlineButton(
                               child: Text(

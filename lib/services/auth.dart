@@ -9,13 +9,13 @@ class AuthenticationService {
     return _firebaseAuth.authStateChanges();
   }
 
-  Future signUpWithEmailAndPassword(String email, String password) async {
+  Future signUpWithEmailAndPassword(String email, String password, String username) async {
     try {
       UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password
       );
-      await DatabaseService(uid: userCredential.user.uid).setUserProfileData("test_user");
+      await DatabaseService(uid: userCredential.user.uid).setUserProfileData(username);
       return userCredential.user;
     }
     catch (e) {
