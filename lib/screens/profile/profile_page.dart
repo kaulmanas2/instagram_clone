@@ -5,6 +5,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:instagram_clone/screens/profile/edit_profile.dart';
 import 'package:instagram_clone/services/auth.dart';
 import 'package:instagram_clone/services/database_service.dart';
+import 'package:instagram_clone/shared/constants.dart';
 import 'package:instagram_clone/shared/loading.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -20,13 +21,15 @@ class _ProfilePageState extends State<ProfilePage> {
   int _followers = 0;
   int _following = 0;
 
+  DocumentSnapshot dataSnapshot;
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
       stream: DatabaseService(uid: _authService.uid).personalUserData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          DocumentSnapshot dataSnapshot = snapshot.data;
+          dataSnapshot = snapshot.data;
           return Scaffold(
             appBar: AppBar(
               leading: Icon(Feather.lock, color: Colors.black, size: 20.0),
@@ -51,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       height: 65.0,
                       child: DrawerHeader(
                         child: Text(
-                          dataSnapshot.data()["username"],
+                          dataSnapshot.data()["username"] ?? "error",
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
@@ -86,120 +89,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(25.0),
-                                child: CircleAvatar(
-                                  backgroundImage: NetworkImage(profilePicURL),
-                                  radius: 40.0,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 15.0, vertical: 5.0),
-                                        child: Text(
-                                          "${posts.length}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20.0
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 15.0),
-                                        child: Text("Posts"),
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 15.0, vertical: 5.0),
-                                        child: Text(
-                                          "${dataSnapshot.data()["followers"]}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20.0
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 15.0),
-                                        child: Text("Followers"),
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 15.0, vertical: 5.0),
-                                        child: Text(
-                                          "${dataSnapshot.data()["following"]}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20.0
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 15.0),
-                                        child: Text("Following"),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
+                              profilePicture(),
+                              socialDetails(),
                             ],
                           ),
-
-                          (_authService.displayName == null || _authService.displayName == "") ? Container() : Container(
-                            padding: EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Text(
-                              _authService.displayName ?? "",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15.0
-                              ),
-                            ),
-                          ),
-
-                          (dataSnapshot.data()["bio"] == null || dataSnapshot.data()["bio"] == "") ? Container() : Container(
-                              padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                              child: Text(
-                                dataSnapshot.data()["bio"] ?? "",
-                              ),
-                          ),
-
-                          Container(
-                            padding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
-                            height: 65.0,
-                            width: double.infinity,
-                            child: OutlineButton(
-                              child: Text(
-                                "Edit Profile",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                              ),
-                              color: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              onPressed: () async {
-                                await Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) => EditProfile()));
-                                setState(() {});
-                              },
-                            ),
-                          ),
+                          userDisplayName(),
+                          userBio(),
+                          editProfileButton(),
                         ],
                       ),
                     ),
@@ -207,46 +103,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ];
               },
 
-              body: Container(
-                alignment: Alignment.topCenter,
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.grid_on,
-                              color: isGridActive ? Colors.black : Colors
-                                  .grey[600],
-                            ),
-                            onPressed: () {
-                              setState(() => isGridActive = true);
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.list,
-                              color: isGridActive ? Colors.grey[600] : Colors
-                                  .black,
-                            ),
-                            onPressed: () {
-                              setState(() => isGridActive = false);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    Expanded(
-                      child: isGridActive ? gridPosts() : listPosts(),
-                    ),
-                  ],
-                ),
-              ),
+              // body: tabBarView(), // use this to make UI look exactly like original insta
+              body: postsTabBarView(),
             ),
           );
         }
@@ -256,140 +114,362 @@ class _ProfilePageState extends State<ProfilePage> {
       }
     );
   }
-}
 
-String profilePicURL = "https://images.pexels.com/photos/1933873/pexels-photo-1933873.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260";
-List<String> posts = [
-  "https://images.pexels.com/photos/2273580/pexels-photo-2273580.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/5845730/pexels-photo-5845730.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/4913466/pexels-photo-4913466.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/5845682/pexels-photo-5845682.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/2273580/pexels-photo-2273580.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/5845730/pexels-photo-5845730.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/4913466/pexels-photo-4913466.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/5845682/pexels-photo-5845682.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/2273580/pexels-photo-2273580.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/5845730/pexels-photo-5845730.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/4913466/pexels-photo-4913466.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/5845682/pexels-photo-5845682.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/2273580/pexels-photo-2273580.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/5845730/pexels-photo-5845730.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/4913466/pexels-photo-4913466.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/5845682/pexels-photo-5845682.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/2273580/pexels-photo-2273580.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/5845730/pexels-photo-5845730.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/4913466/pexels-photo-4913466.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/5845682/pexels-photo-5845682.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/2273580/pexels-photo-2273580.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/5845730/pexels-photo-5845730.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/4913466/pexels-photo-4913466.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/5845682/pexels-photo-5845682.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+  Container profilePicture() {
+    return Container(
+      padding: EdgeInsets.all(25.0),
+      child: CircleAvatar(
+        backgroundImage: NetworkImage(profilePicURL),
+        radius: 40.0,
+      ),
+    );
+  }
 
-];
+  Container socialDetails() {
+    return Container(
+      child: Row(
+        children: [
+          noOfPosts(),
+          noOfFollowers(),
+          noOfFollowing(),
+        ],
+      ),
+    );
+  }
 
-Container gridPosts() {
-  return Container(
-    padding: EdgeInsets.only(top: 5.0),
-    child: GridView.count(
-      crossAxisCount: 3,
-      children: posts.map((post) {
-        return Container(
-          padding: EdgeInsets.all(1.0),
-          child: Image.network(post, fit: BoxFit.cover,),
-        );
-      }).toList(),
-    ),
-  );
-}
+  Column noOfPosts() {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+          child: Text(
+            "${posts.length}",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0
+            ),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 15.0),
+          child: Text("Posts"),
+        ),
+      ],
+    );
+  }
 
-Container listPosts() {
-  return Container(
-    padding: EdgeInsets.only(top: 5.0),
-    child: ListView.builder(
-      itemCount: posts.length,
-      itemBuilder: (context, index) {
-        return Column(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(profilePicURL),
-                        radius: 15.0,
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Text(
-                          "test_profile",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
+  Column noOfFollowers() {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+          child: Text(
+            "${dataSnapshot.data()["followers"]}",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0
+            ),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 15.0),
+          child: Text("Followers"),
+        ),
+      ],
+    );
+  }
+
+  Column noOfFollowing() {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+          child: Text(
+            "${dataSnapshot.data()["following"]}",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0
+            ),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 15.0),
+          child: Text("Following"),
+        ),
+      ],
+    );
+  }
+
+  Container userDisplayName() {
+    if (_authService.displayName == null || _authService.displayName == "") {
+      return Container();
+    }
+    else {
+      return Container(
+        padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 5.0),
+        child: Text(
+          _authService.displayName ?? "",
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15.0
+          ),
+        ),
+      );
+    }
+  }
+
+  Container userBio() {
+    if (dataSnapshot.data()["bio"] == null || dataSnapshot.data()["bio"] == "") {
+      return Container();
+    }
+    else {
+      return Container(
+        padding: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 0.0),
+        child: Text(
+          dataSnapshot.data()["bio"] ?? "",
+        ),
+      );
+    }
+  }
+
+  Container editProfileButton() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
+      height: 65.0,
+      width: double.infinity,
+      child: OutlineButton(
+        child: Text(
+          "Edit Profile",
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        onPressed: () async {
+          await Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile()));
+          setState(() {});
+        },
+      ),
+    );
+  }
+
+  Container postsTabBarView() {
+    return Container(
+      alignment: Alignment.topCenter,
+      color: Colors.white,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child: IconButton(
+                  icon: Icon(
+                    Icons.grid_on,
+                    color: isGridActive ? Colors.black : Colors
+                        .grey[600],
                   ),
-                  Container(
-                    child: IconButton(
-                      icon: Icon(Icons.more_vert),
-                      onPressed: () => print("More clicked"),
-                    ),
-                  ),
-                ],
+                  onPressed: () {
+                    setState(() => isGridActive = true);
+                  },
+                ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.all(1.0),
-              child: Image.network(posts[index], fit: BoxFit.cover, height: 500.0,),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          AntDesign.hearto,
-                          size: 25.0,
-                        ),
-                        onPressed: () => print("Like Post"),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Octicons.comment,
-                          size: 25.0,
-                        ),
-                        onPressed: () => print("Comment Post"),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          FontAwesome.send_o,
-                          size: 25.0,
-                        ),
-                        onPressed: () => print("Send Post"),
-                      ),
-                    ],
+              Expanded(
+                child: IconButton(
+                  icon: Icon(
+                    Icons.list,
+                    color: isGridActive ? Colors.grey[600] : Colors
+                        .black,
+                  ),
+                  onPressed: () {
+                    setState(() => isGridActive = false);
+                  },
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: isGridActive ? gridPosts() : listPosts(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container gridPosts() {
+    return Container(
+      color: Colors.white,
+      child: GridView.count(
+        crossAxisCount: 3,
+        children: posts.map((post) {
+          return Container(
+            padding: EdgeInsets.all(1.0),
+            child: Image.network(post, fit: BoxFit.cover,),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Container listPosts() {
+    return Container(
+      color: Colors.white,
+      child: ListView.builder(
+        itemCount: posts.length,
+        itemBuilder: (context, index) {
+          return Column(
+            children: [
+              listPostsTop(index),
+              listPostsMid(index),
+              listPostsBottom(index),
+              Divider(thickness: 1.0),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Container listPostsTop(int index) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 15.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage(profilePicURL),
+                radius: 15.0,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 15.0),
+                child: Text(
+                  dataSnapshot.data()["username"] ?? "error",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.0),
-                  child: IconButton(
-                    icon: Icon(Icons.save_alt),
-                    onPressed: () => print("More clicked"),
+              ),
+            ],
+          ),
+          Container(
+            child: IconButton(
+              icon: Icon(Icons.more_vert),
+              onPressed: () => print("More clicked"),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container listPostsMid(int index) {
+    return Container(
+      padding: EdgeInsets.all(1.0),
+      child: Image.network(posts[index], fit: BoxFit.cover, height: 500.0,),
+    );
+  }
+
+  Container listPostsBottom(int index) {
+    return Container(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        AntDesign.hearto,
+                        size: 25.0,
+                      ),
+                      onPressed: () => print("Like Post"),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Octicons.comment,
+                        size: 25.0,
+                      ),
+                      onPressed: () => print("Comment Post"),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        FontAwesome.send_o,
+                        size: 25.0,
+                      ),
+                      onPressed: () => print("Send Post"),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                child: IconButton(
+                  icon: Icon(Icons.save_alt),
+                  onPressed: () => print("More clicked"),
+                ),
+              ),
+            ],
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Timestamp",
+              style: TextStyle(
+                color: Colors.grey[700],
+              ),
+            )
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
+  // this tab bar looks exactly the same but hinders in nested scrolling
+  DefaultTabController tabBarView() {
+    return DefaultTabController(
+        length: 2,
+        initialIndex: 0,
+        child: Scaffold(
+          appBar: AppBar(
+            elevation: 0.0,
+            backgroundColor: Colors.white,
+            flexibleSpace: TabBar(
+              indicatorColor: Colors.black,
+              tabs: [
+                Tab(
+                  icon: Icon(
+                    Icons.grid_on,
+                    color: Colors.black,
+                  ),
+                ),
+                Tab(
+                  icon: Icon(
+                    Icons.list,
+                    color: Colors.black,
                   ),
                 ),
               ],
             ),
-            Divider(thickness: 1.0),
-          ],
-        );
-      },
-    ),
-  );
+          ),
+          body: TabBarView(
+            children: [
+              gridPosts(),
+              listPosts(),
+            ],
+          ),
+        )
+    );
+  }
 }

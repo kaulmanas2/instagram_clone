@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:instagram_clone/services/auth.dart';
+import 'package:instagram_clone/shared/constants.dart';
 
 class HomeFeed extends StatefulWidget {
   @override
@@ -15,20 +16,16 @@ class _HomeFeedState extends State<HomeFeed> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: IconButton(
-          icon: Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 5.0),
-            child: Text(
-              "Instagram",
-              style: TextStyle(
-                fontFamily: "Billabong",
-                color: Colors.black,
-                fontSize: 30.0
-              ),
+        title: Container(
+          padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 5.0),
+          child: Text(
+            "Instagram Clone",
+            style: TextStyle(
+              fontFamily: "Billabong",
+              color: Colors.black,
+              fontSize: 30.0
             ),
           ),
-          onPressed: () => print("Go to top"),
-          iconSize: 120.0,
         ),
         backgroundColor: Colors.white,
         elevation: 1.0,
@@ -68,50 +65,3 @@ class _HomeFeedState extends State<HomeFeed> {
     );
   }
 }
-
-/*
-    return Center(
-      child: Column(
-        children: [
-          Container(
-            child: RaisedButton(
-              child: Text("Log Out"),
-              onPressed: () async {
-                dynamic result = await _authService.signOut();
-                if (result == null) {
-                  print("Error in logging out");
-                }
-              },
-            ),
-          ),
-          Text(_authService.userEmail),
-        ],
-      ),
-    );
-*/
-
-/*
-    body: Container(
-      color: Colors.white,
-      child: Center(
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Divider(height: 1.0, color: Colors.black),
-            HomeFeed(),
-            Container(
-              child: Column(
-                children: [
-                  Divider(height: 1.0, color: Colors.black),
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Text("Bottom Bar"),
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-*/

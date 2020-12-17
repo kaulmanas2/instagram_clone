@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:instagram_clone/services/auth.dart';
 import 'package:instagram_clone/shared/loading.dart';
 
@@ -19,6 +20,8 @@ class _SignUpState extends State<SignUp> {
   String username = "";
   String email = "";
   String password = "";
+  String confirmPassword = "";
+
   bool _obscureText = true;
   bool _isButtonEnabled = false;
   bool isLoading = false;
@@ -27,7 +30,7 @@ class _SignUpState extends State<SignUp> {
 
   isEnabled() {
     setState(() {
-      if (email.isNotEmpty && password.isNotEmpty && username.isNotEmpty) {
+      if (username.isNotEmpty && email.isNotEmpty && password.isNotEmpty && confirmPassword.isNotEmpty) {
         _isButtonEnabled = true;
       }
       else {
@@ -39,224 +42,239 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
 
-    // return SafeArea(
-    //   child: Scaffold(
-    //     body: DefaultTabController(
-    //       length: 2,
-    //       child: Column(
-    //           children: [
-    //             TabBar(tabs: _kTabs, labelColor: Colors.black, indicatorColor: Colors.black),
-    //             Expanded(child: TabBarView(children: _kTabPages)),
-    //           ],
-    //         ),
-    //       ),
-    //   ),
-    // );
+    var _pageSize = MediaQuery.of(context).size.height;
+    var _notifySize = MediaQuery.of(context).padding.top;
+    var _appBarSize = 0;
+    // var _appBarSize = appBar.preferredSize.height;
+
+    // TODO : Update textFields to form key type
 
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: isLoading ? Loading() : Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
+        body: isLoading ? Loading() : SingleChildScrollView(
+          child: Container(
+            height: _pageSize - (_notifySize + _appBarSize),
+            color: Colors.white,
+            child: Column(
               children: [
-                Container(
-                  child: Image.asset(
-                    "assets/images/register_user_icon.png",
-                    color: Colors.black,
-                    height: 300.0,
-                    width: 300.0,
-                  ),
-                ),
-
-                Container(
-                  padding: EdgeInsets.fromLTRB(25.0, 0.0, 25.0, 0.0),
-                  height: 50.0,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Username",
-                    ),
-                    onChanged: (val) {
-                      setState(() {
-                        username = val.toString();
-                        isEnabled();
-                      });
-                    },
-                  ),
-                ),
-
-                SizedBox(height: 15.0),
-
-                Container(
-                  padding: EdgeInsets.fromLTRB(25.0, 0.0, 25.0, 0.0),
-                  height: 50.0,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Email",
-                    ),
-                    onChanged: (val) {
-                      setState(() {
-                        email = val.toString();
-                        isEnabled();
-                      });
-                    },
-                  ),
-                ),
-
-                SizedBox(height: 15.0),
-
-                Container(
-                  padding: EdgeInsets.fromLTRB(25.0, 0.0, 25.0, 0.0),
-                  height: 50.0,
-                  child: TextFormField(
-                    obscureText: _obscureText,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Password",
-                      suffixIcon: GestureDetector(
-                        child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
-                        onTap: () {
-                          setState(() => _obscureText = !_obscureText);
-                        },
-                      )
-                    ),
-                    onChanged: (val) {
-                      setState(() {
-                        password = val.toString();
-                        isEnabled();
-                      });
-                    },
-                  ),
-                ),
-
-                SizedBox(height: 15.0),
-
-                Container(
-                  padding: EdgeInsets.fromLTRB(25.0, 0.0, 25.0, 0.0),
-                  height: 50.0,
-                  width: double.infinity,
-                  child: FlatButton(
-                    child: Text(
-                      "Sign Up",
-                      style: TextStyle(
-                          color: Colors.white
-                      ),
-                    ),
-                    color: Colors.blue,
-                    disabledColor: Colors.blue[200],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    onPressed: _isButtonEnabled
-                      ? () async {
-                        print("$email $password");
-                        setState(() => isLoading = true);
-                        dynamic result = await _authService.signUpWithEmailAndPassword(email, password, username);
-                        if (result == null) {
-                          setState(() {
-                            error = "Error in Registration";
-                            isLoading = false;
-                          });
-                        }
-                      }
-                      : null,
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text(
-                    error,
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 15.0,
-                    ),
-                  ),
-                ),
+                userIcon(),
+                usernameField(),
+                emailField(),
+                passwordField(),
+                confirmPasswordField(),
+                signUpButton(),
+                Expanded(child: Container()),
+                bottomLogInBanner(),
               ],
             ),
-
-            Container(
-              child: Column(
-                children: [
-                  Divider(thickness: 2.0),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 15.0),
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "Already have an account? ",
-                              style: TextStyle(color: Colors.grey),
-                              recognizer: TapGestureRecognizer()..onTap = () {
-                                setState(() {
-                                  print("Go get Sign In");
-                                  widget.switchView();
-                                });
-                                // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignIn()));
-                              }
-                            ),
-                            TextSpan(
-                              text: "Log in.",
-                              style: TextStyle(
-                                color: Colors.blue[900],
-                                fontWeight: FontWeight.bold,
-                              ),
-                              recognizer: TapGestureRecognizer()..onTap = () {
-                                setState(() {
-                                  print("Go get Sign In");
-                                  widget.switchView();
-                                });
-                                // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignIn()));
-                              }
-                            ),
-                          ]
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
-}
 
-/*
-Column(
-  children: [
-    Container(
-      padding: EdgeInsets.fromLTRB(25.0, 0.0, 25.0, 0.0),
-      height: 50.0,
+  Container userIcon() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            child: Icon(
+              Icons.circle,
+              color: Colors.black,
+              size: 270.0,
+            ),
+          ),
+          Container(
+            child: Icon(
+              Icons.circle,
+              color: Colors.white,
+              size: 250.0,
+            ),
+          ),
+          Container(
+            child: Icon(
+              Feather.user,
+              color: Colors.black,
+              size: 200.0,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container usernameField() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+      height: 60.0,
       child: TextFormField(
         decoration: InputDecoration(
           border: OutlineInputBorder(),
-          labelText: "Phone number, email or username",
+          labelText: "Username",
         ),
-        onChanged: (_) {},
+        onChanged: (val) {
+          setState(() {
+            username = val.toString();
+            isEnabled();
+          });
+        },
       ),
-    ),
+    );
+  }
 
-    Container(
-      padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 0.0),
-      child: Text(
-        "You may receive SMS updates from Instagram and can opt out at any time.",
-        style: TextStyle(
-          color: Colors.grey,
-          fontSize: 12.0
+  Container emailField() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+      height: 60.0,
+      child: TextFormField(
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: "Email",
         ),
-        textAlign: TextAlign.center,
+        onChanged: (val) {
+          setState(() {
+            email = val.toString();
+            isEnabled();
+          });
+        },
       ),
-    ),
-  ],
-),
-*/
+    );
+  }
+
+  Container passwordField() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+      height: 60.0,
+      child: TextFormField(
+        obscureText: _obscureText,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: "Password",
+          suffixIcon: GestureDetector(
+            child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
+            onTap: () {
+              setState(() => _obscureText = !_obscureText);
+            },
+          )
+        ),
+        onChanged: (val) {
+          setState(() {
+            password = val.toString();
+            isEnabled();
+          });
+        },
+      ),
+    );
+  }
+
+  Container confirmPasswordField() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+      height: 60.0,
+      child: TextFormField(
+        obscureText: true,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: "Confirm Password",
+        ),
+        onChanged: (val) {
+          setState(() {
+            confirmPassword = val.toString();
+            isEnabled();
+          });
+        },
+      ),
+    );
+  }
+
+  // TODO : Handle passwords do not match case
+  Container signUpButton() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
+      height: 75.0,
+      width: double.infinity,
+      child: FlatButton(
+        child: Text(
+          "Sign Up",
+          style: TextStyle(
+              color: Colors.white
+          ),
+        ),
+        color: Colors.blue,
+        disabledColor: Colors.blue[200],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        onPressed: _isButtonEnabled ? () async {
+          if (password == confirmPassword) {
+            print("$username $email $password, $confirmPassword");
+            setState(() => isLoading = true);
+            dynamic result = await _authService.signUpWithEmailAndPassword(
+                email, password, username);
+            if (result == null) {
+              setState(() {
+                error = "Error in Registration";
+                isLoading = false;
+              });
+            }
+          }
+          else {
+            setState(() {
+              error = "Passwords do not match";
+              print(error);
+            });
+          }
+        }
+        : null,
+      ),
+    );
+  }
+
+  Container bottomLogInBanner() {
+    return Container(
+      child: Column(
+        children: [
+          Divider(thickness: 2.0),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 15.0),
+            child: Container(
+              alignment: Alignment.center,
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "Already have an account? ",
+                      style: TextStyle(color: Colors.grey),
+                      recognizer: TapGestureRecognizer()..onTap = () {
+                        setState(() {
+                          print("Go get Sign In");
+                          widget.switchView();
+                        });
+                      }
+                    ),
+                    TextSpan(
+                      text: "Log in.",
+                      style: TextStyle(
+                        color: Colors.blue[900],
+                        fontWeight: FontWeight.bold,
+                      ),
+                      recognizer: TapGestureRecognizer()..onTap = () {
+                        setState(() {
+                          print("Go get Sign In");
+                          widget.switchView();
+                        });
+                      }
+                    ),
+                  ]
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
