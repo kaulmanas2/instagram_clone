@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:instagram_clone/services/auth.dart';
 import 'package:instagram_clone/services/database_service.dart';
 import 'package:instagram_clone/shared/constants.dart';
@@ -17,16 +20,14 @@ class _EditProfileState extends State<EditProfile> {
 
   DocumentSnapshot dataSnapshot;
 
+  File choosenProfileImage;
+
   String displayName;
   String username;
   String bio;
 
   bool isLoading = false;
   bool isButtonEnabled = true;
-
-  void changeProfilePic(String displayName) {
-    print("Change Profile Photo");
-  }
 
   // void changeProfileDetails() async {
   //   print("Change Name, Username, Bio");
@@ -39,7 +40,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<DocumentSnapshot>(
+    return  StreamBuilder<DocumentSnapshot>(
       stream: DatabaseService(uid: _authService.uid).personalUserData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -117,7 +118,9 @@ class _EditProfileState extends State<EditProfile> {
       padding: EdgeInsets.symmetric(vertical: 15.0),
       child: Center(
         child: CircleAvatar(
-          backgroundImage: NetworkImage(profilePicURL),
+          backgroundImage: choosenProfileImage == null
+              ? NetworkImage(dataSnapshot.data()["profile_pic"])
+              : FileImage(choosenProfileImage),
           radius: 50.0,
         ),
       ),
@@ -134,8 +137,112 @@ class _EditProfileState extends State<EditProfile> {
             color: Colors.blue,
           ),
         ),
-        onPressed: () => changeProfilePic("Test"),
+        onPressed: () => _showChangePictureOptionsSheet(),
       )
+    );
+  }
+
+  Future updateProfilePic(File profilePic) async {
+    try {
+      await DatabaseService(uid: _authService.uid).updateUserProfilePicture(profilePic);
+      print("Image Uploaded");
+    }
+    catch(e) {
+      print(e.toString());
+    }
+  }
+
+  // Check for camera and gallery service
+  Future chooseGalleryImage() async {
+    try {
+      dynamic img = await ImagePicker().getImage(source: ImageSource.gallery);
+      setState(() {
+        choosenProfileImage = File(img.path);
+        print("Image Choosen from gallery");
+        updateProfilePic(choosenProfileImage);
+      });
+    }
+    catch(e) {
+      print("ERROR HAS OCCURED ${e.toString()}");
+      setState(() {
+        print("Image not Choosen");
+      });
+    }
+    Navigator.pop(context);
+  }
+
+  Future chooseCameraImage() async {
+    try {
+      dynamic img = await ImagePicker().getImage(source: ImageSource.camera);
+      setState(() {
+        choosenProfileImage = File(img.path);
+        print("Image Choosen from camera");
+        updateProfilePic(choosenProfileImage);
+      });
+    }
+    catch(e) {
+      setState(() {
+        print("Image not Choosen");
+      });
+    }
+    Navigator.pop(context);
+  }
+
+  void _showChangePictureOptionsSheet() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return changePicOptions();
+        }
+    );
+  }
+
+  Container changePicOptions() {
+    return Container(
+      child: Wrap(
+        direction: Axis.vertical,
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: TextButton(
+              child: Text(
+                "Upload Picture from Gallery",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18.0,
+                ),
+              ),
+              onPressed: () async => await chooseGalleryImage(),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: TextButton(
+              child: Text(
+                "Capture New Picture from Camera",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18.0,
+                ),
+              ),
+              onPressed: () async => await chooseCameraImage(),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: TextButton(
+              child: Text(
+                "Remove Current Picture",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 18.0,
+                ),
+              ),
+              onPressed: () {},
+            ),
+          ),
+        ],
+      ),
     );
   }
 

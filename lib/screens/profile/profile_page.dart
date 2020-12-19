@@ -119,7 +119,9 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       padding: EdgeInsets.all(25.0),
       child: CircleAvatar(
-        backgroundImage: NetworkImage(profilePicURL),
+        backgroundImage: dataSnapshot.data()["profile_pic"] == ""
+          ? NetworkImage(profilePicURL)
+          : NetworkImage(dataSnapshot.data()["profile_pic"]),
         radius: 40.0,
       ),
     );
@@ -281,8 +283,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: IconButton(
                   icon: Icon(
                     Icons.list,
-                    color: isGridActive ? Colors.grey[600] : Colors
-                        .black,
+                    color: isGridActive ? Colors.grey[600] : Colors.black,
                   ),
                   onPressed: () {
                     setState(() => isGridActive = false);
@@ -325,7 +326,6 @@ class _ProfilePageState extends State<ProfilePage> {
               listPostsTop(index),
               listPostsMid(index),
               listPostsBottom(index),
-              Divider(thickness: 1.0),
             ],
           );
         },
@@ -342,7 +342,9 @@ class _ProfilePageState extends State<ProfilePage> {
           Row(
             children: [
               CircleAvatar(
-                backgroundImage: NetworkImage(profilePicURL),
+                backgroundImage: dataSnapshot.data()["profile_pic"] == ""
+                  ? NetworkImage(profilePicURL)
+                  : NetworkImage(dataSnapshot.data()["profile_pic"]),
                 radius: 15.0,
               ),
               Container(
@@ -420,7 +422,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 15.0),
             alignment: Alignment.centerLeft,
             child: Text(
               "Timestamp",
