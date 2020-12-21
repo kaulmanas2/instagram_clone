@@ -51,32 +51,6 @@ class _LoginSelectionState extends State<LoginSelection> {
     }
   }
 
-  Container languageSelection() {
-    List<String> languages = ["English (United States)", "Hindi"];
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-      alignment: Alignment.center,
-      color: Colors.white,
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton(
-          items: languages.map((String value) {
-            return new DropdownMenuItem<String>(
-              value: value,
-              child: Text(
-                value,
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-            );
-          }).toList(),
-          value: languages[0],
-          onChanged: (_) {},
-        ),
-      ),
-    );
-  }
-
   Container goToSignUp() {
     return Container(
       padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
@@ -89,7 +63,7 @@ class _LoginSelectionState extends State<LoginSelection> {
               color: Colors.white
           ),
         ),
-        color: Colors.blue,
+        color: Colors.lightBlue[700],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5.0),
         ),
@@ -99,7 +73,6 @@ class _LoginSelectionState extends State<LoginSelection> {
             isLoginSelectionSelected = false;
             showSignIn = false;
           });
-          // Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
         },
       ),
     );
@@ -111,7 +84,7 @@ class _LoginSelectionState extends State<LoginSelection> {
         child: Text(
           "Log In",
           style: TextStyle(
-              color: Colors.blue,
+              color: Colors.lightBlue[700],
               fontSize: 15.0,
               fontWeight: FontWeight.bold
           ),
@@ -122,7 +95,6 @@ class _LoginSelectionState extends State<LoginSelection> {
             isLoginSelectionSelected = false;
             showSignIn = true;
           });
-          // Navigator.push(context, MaterialPageRoute(builder: (context) => SignIn()),);
         },
       ),
     );

@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:uuid/uuid.dart';
 
 class DatabaseService {
 
@@ -8,15 +10,15 @@ class DatabaseService {
   DatabaseService({this.uid});
 
   final CollectionReference userProfilesCollection = FirebaseFirestore.instance.collection("user_profiles");
+  final CollectionReference userPostsCollection = FirebaseFirestore.instance.collection("user_posts");
 
   Future setUserProfileData(String username) async {
     return await userProfilesCollection.doc(uid).set({
       "username": username,
       "profile_pic" : "",
       "bio": "",
-      "posts" : 0,
-      "followers" : 0,
-      "following" : 0,
+      "followers" : new List(),
+      "following" : new List(),
     });
   }
 
@@ -30,10 +32,29 @@ class DatabaseService {
           "profile_pic" : downURL
         });
       });
-
-      // String downURL = await (await uploadTask.onComplete).ref.getDownloadURL();
     }
     catch(e) {
+      print(e.toString());
+    }
+  }
+  
+  Future addNewPost(File post, String caption, String location) async {
+    try {
+      var uuid = Uuid().v1();
+      Reference ref = FirebaseStorage.instance.ref(uid).child("post_$uuid");
+      UploadTask uploadTask = ref.putFile(post);
+      uploadTask.whenComplete(() async {
+        String downURL = await uploadTask.snapshot.ref.getDownloadURL();
+        return await userPostsCollection.doc(uid).collection("posts").add({
+          "post_url": downURL,
+          "caption": caption,
+          "location": location,
+          "timestamp": DateTime.now()
+        });
+      });
+      print("Image Uploaded");
+    }
+    catch (e) {
       print(e.toString());
     }
   }
@@ -45,7 +66,7 @@ class DatabaseService {
     });
   }
 
-  Future updateUserSocalData(String followers, String following) async {
+  Future updateUserSocialData(String followers, String following) async {
     return await userProfilesCollection.doc(uid).update({
       "followers" : int.parse(followers),
       "following" : int.parse(following),

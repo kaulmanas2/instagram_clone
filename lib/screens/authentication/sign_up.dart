@@ -202,8 +202,8 @@ class _SignUpState extends State<SignUp> {
               color: Colors.white
           ),
         ),
-        color: Colors.blue,
-        disabledColor: Colors.blue[200],
+        color: Colors.lightBlue[700],
+        disabledColor: Colors.lightBlue[100],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5.0),
         ),
@@ -258,7 +258,7 @@ class _SignUpState extends State<SignUp> {
                     TextSpan(
                       text: "Log in.",
                       style: TextStyle(
-                        color: Colors.blue[900],
+                        color: Colors.lightBlue[900],
                         fontWeight: FontWeight.bold,
                       ),
                       recognizer: TapGestureRecognizer()..onTap = () {

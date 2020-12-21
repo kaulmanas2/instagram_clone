@@ -166,7 +166,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
           child: Text(
-            "${dataSnapshot.data()["followers"]}",
+            "${dataSnapshot.data()["followers"].length}",
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20.0
@@ -187,7 +187,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
           child: Text(
-            "${dataSnapshot.data()["following"]}",
+            "${dataSnapshot.data()["following"].length}",
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20.0
@@ -308,7 +308,7 @@ class _ProfilePageState extends State<ProfilePage> {
         children: posts.map((post) {
           return Container(
             padding: EdgeInsets.all(1.0),
-            child: Image.network(post, fit: BoxFit.cover,),
+            child: Image.network(post, fit: BoxFit.cover),
           );
         }).toList(),
       ),

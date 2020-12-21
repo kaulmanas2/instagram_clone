@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:instagram_clone/screens/home/home_feed.dart';
+import 'package:instagram_clone/screens/post_upload/upload_post.dart';
 import 'package:instagram_clone/screens/profile/profile_page.dart';
 import 'package:instagram_clone/services/auth.dart';
 import 'package:instagram_clone/services/database_service.dart';
@@ -26,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   var tabBarContent = <Widget>[
     HomeFeed(), // Text('Index 0: Home'),
     Text('Index 1: Reels'),
-    Text('Index 2: Add Photo'),
+    UploadPost(), // Text('Index 2: Add Photo')
     Text('Index 3: Likes'),
     ProfilePage(), // Text('Index 4: Profile'),
   ];

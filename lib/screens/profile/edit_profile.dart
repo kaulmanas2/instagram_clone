@@ -20,7 +20,7 @@ class _EditProfileState extends State<EditProfile> {
 
   DocumentSnapshot dataSnapshot;
 
-  File choosenProfileImage;
+  File chosenProfileImage;
 
   String displayName;
   String username;
@@ -71,7 +71,7 @@ class _EditProfileState extends State<EditProfile> {
                 IconButton(
                   icon: Icon(
                       Icons.check,
-                      color: Colors.blue,
+                      color: Colors.lightBlue[700],
                       size: 35.0
                   ),
                   onPressed: isButtonEnabled
@@ -118,9 +118,11 @@ class _EditProfileState extends State<EditProfile> {
       padding: EdgeInsets.symmetric(vertical: 15.0),
       child: Center(
         child: CircleAvatar(
-          backgroundImage: choosenProfileImage == null
-              ? NetworkImage(dataSnapshot.data()["profile_pic"])
-              : FileImage(choosenProfileImage),
+          backgroundImage: chosenProfileImage == null
+              ? dataSnapshot.data()["profile_pic"] == ""
+                ? NetworkImage(profilePicURL)
+                : NetworkImage(dataSnapshot.data()["profile_pic"])
+              : FileImage(chosenProfileImage),
           radius: 50.0,
         ),
       ),
@@ -134,7 +136,7 @@ class _EditProfileState extends State<EditProfile> {
           "Change Profile Photo",
           style: TextStyle(
             fontSize: 20.0,
-            color: Colors.blue,
+            color: Colors.lightBlue[700],
           ),
         ),
         onPressed: () => _showChangePictureOptionsSheet(),
@@ -157,9 +159,9 @@ class _EditProfileState extends State<EditProfile> {
     try {
       dynamic img = await ImagePicker().getImage(source: ImageSource.gallery);
       setState(() {
-        choosenProfileImage = File(img.path);
+        chosenProfileImage = File(img.path);
         print("Image Choosen from gallery");
-        updateProfilePic(choosenProfileImage);
+        updateProfilePic(chosenProfileImage);
       });
     }
     catch(e) {
@@ -175,9 +177,9 @@ class _EditProfileState extends State<EditProfile> {
     try {
       dynamic img = await ImagePicker().getImage(source: ImageSource.camera);
       setState(() {
-        choosenProfileImage = File(img.path);
+        chosenProfileImage = File(img.path);
         print("Image Choosen from camera");
-        updateProfilePic(choosenProfileImage);
+        updateProfilePic(chosenProfileImage);
       });
     }
     catch(e) {
