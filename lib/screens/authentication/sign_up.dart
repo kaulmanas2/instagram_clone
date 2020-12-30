@@ -51,23 +51,28 @@ class _SignUpState extends State<SignUp> {
 
     return SafeArea(
       child: Scaffold(
-        body: isLoading ? Loading() : SingleChildScrollView(
-          child: Container(
-            height: _pageSize - (_notifySize + _appBarSize),
-            color: Colors.white,
-            child: Column(
-              children: [
-                userIcon(),   // change this to icon => Icons.account_circle_outlined
-                usernameField(),
-                emailField(),
-                passwordField(),
-                confirmPasswordField(),
-                signUpButton(),
-                Expanded(child: Container()),
-                bottomLogInBanner(),
-              ],
-            ),
-          ),
+        body: isLoading ? Loading() : CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    userIcon(),   // change this to icon => Icons.account_circle_outlined
+                    usernameField(),
+                    emailField(),
+                    passwordField(),
+                    confirmPasswordField(),
+                    signUpButton(),
+                    Flexible(child: Container(), fit: FlexFit.loose),
+                    bottomLogInBanner(),
+                  ],
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -76,31 +81,10 @@ class _SignUpState extends State<SignUp> {
   Container userIcon() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            child: Icon(
-              Icons.circle,
-              color: Colors.black,
-              size: 270.0,
-            ),
-          ),
-          Container(
-            child: Icon(
-              Icons.circle,
-              color: Colors.white,
-              size: 250.0,
-            ),
-          ),
-          Container(
-            child: Icon(
-              Feather.user,
-              color: Colors.black,
-              size: 200.0,
-            ),
-          ),
-        ],
+      child: Icon(
+        Icons.account_circle,
+        size: 300.0,
+        color: Colors.black,
       ),
     );
   }

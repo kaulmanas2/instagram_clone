@@ -40,35 +40,33 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-
-    var _pageSize = MediaQuery.of(context).size.height;
-    var _notifySize = MediaQuery.of(context).padding.top;
-    var _appBarSize = 0;
-    // var _appBarSize = appBar.preferredSize.height;
-
-    // TODO: Make ScrollView responsive using CustomScrollView
     return SafeArea(
       child: Scaffold(
-        body: isLoading ? Loading() : SingleChildScrollView(
-          child: Container(
-            height: _pageSize - (_notifySize + _appBarSize),
-            color: Colors.white,
-            child: Column(
-              children: [
-                languageSelection(),
-                Expanded(child: Container()),
-                instaText(),
-                emailField(),
-                passwordField(),
-                loginButton(),
-                getHelpText(),
-                orPartition(),
-                loginWithFacebook(),
-                Expanded(child: Container()),
-                bottomSignUpBanner(),
-              ]
+        body: isLoading ? Loading() : CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                    children: [
+                      languageSelection(),
+                      Flexible(child: Container(), fit: FlexFit.loose),
+                      instaText(),
+                      emailField(),
+                      passwordField(),
+                      loginButton(),
+                      getHelpText(),
+                      orPartition(),
+                      loginWithFacebook(),
+                      Flexible(child: Container(), fit: FlexFit.loose),
+                      bottomSignUpBanner(),
+                    ]
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
