@@ -32,6 +32,8 @@ class _UploadPostState extends State<UploadPost> {
             onPressed: () {
               setState(() {
                 chosenPostImage = null;
+                picLocation = "";
+                picCaption = "";
               });
             }
           ),
@@ -60,6 +62,8 @@ class _UploadPostState extends State<UploadPost> {
                   if (result == null) {
                     setState(() {
                       chosenPostImage = null;
+                      picLocation = "";
+                      picCaption = "";
                     });
                   }
                 }

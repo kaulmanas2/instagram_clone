@@ -121,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
       padding: EdgeInsets.all(25.0),
       child: CircleAvatar(
         backgroundImage: personalUserDataSnapshot.data()["profile_pic"] == ""
-          ? NetworkImage(profilePicURL)
+          ? AssetImage("assets/images/no_profile_pic.png")
           : NetworkImage(personalUserDataSnapshot.data()["profile_pic"]),
         radius: 40.0,
       ),
@@ -141,7 +141,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Column noOfPosts() {
-    final postsList = Provider.of<List<Posts>>(context);
+    final postsList = Provider.of<List<Posts>>(context) ?? [];
     return Column(
       children: [
         Container(
@@ -302,8 +302,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Container gridPosts() {
-    final postsList = Provider.of<List<Posts>>(context).reversed.toList();
-    // print(postsList.runtimeType);
+    final postsList = Provider.of<List<Posts>>(context) ?? [];
+    postsList.reversed.toList();
     if (postsList.isEmpty) {
       return Container(
         child: Center(
@@ -334,7 +334,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Container listPosts() {
-    final postsList = Provider.of<List<Posts>>(context).reversed.toList();
+    final postsList = Provider.of<List<Posts>>(context) ?? [];
+    postsList.reversed.toList();
     return Container(
       color: Colors.white,
       child: ListView.builder(
@@ -362,7 +363,7 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               CircleAvatar(
                 backgroundImage: personalUserDataSnapshot.data()["profile_pic"] == ""
-                  ? NetworkImage(profilePicURL)
+                  ? AssetImage("assets/images/no_profile_pic.png")
                   : NetworkImage(personalUserDataSnapshot.data()["profile_pic"]),
                 // backgroundImage: NetworkImage(profilePicURL),
                 radius: 15.0,

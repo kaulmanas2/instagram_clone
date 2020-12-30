@@ -27,15 +27,11 @@ class Wrapper extends StatelessWidget {
       return MultiProvider(
         providers: [
           StreamProvider<DocumentSnapshot>.value(
-            value: DatabaseService().personalUserData,
+            value: DatabaseService(uid: _auth.uid).personalUserData,
           ),
 
-          // StreamProvider<List<Posts>>.value(
-          //   value: DatabaseService().userPosts,
-          // ),
-
           StreamProvider<List<Posts>>.value(
-            value: DatabaseService().userPostsNew,
+            value: DatabaseService(uid: _auth.uid).userPostsNew,
           ),
         ],
         child: HomePage(),

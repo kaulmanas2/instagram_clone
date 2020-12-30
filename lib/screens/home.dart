@@ -18,16 +18,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   final AuthenticationService _authService = AuthenticationService();
-
+  GlobalKey bottomNavBarKey = GlobalKey();
   DocumentSnapshot dataSnapshot;
 
   int currentIndex = 0;
   int _currentPage = 0;
 
   var tabBarContent = <Widget>[
-    HomeFeed(), // Text('Index 0: Home'),
+    HomeFeed(),
     Text('Index 1: Reels'),
-    UploadPost(), // Text('Index 2: Add Photo')
+    UploadPost(),
     Text('Index 3: Likes'),
     ProfilePage(), // Text('Index 4: Profile'),
   ];
@@ -47,6 +47,7 @@ class _HomePageState extends State<HomePage> {
                 child: tabBarContent[currentIndex],
               ),
               bottomNavigationBar: BottomNavigationBar(
+                key: bottomNavBarKey,
                 backgroundColor: Colors.white,
                 currentIndex: currentIndex,
                 items: [
@@ -54,8 +55,7 @@ class _HomePageState extends State<HomePage> {
                       icon: Icon(
                         AntDesign.home,
                         size: 25.0,
-                        color: (_currentPage == 0) ? Colors.black : Colors
-                            .grey[600],
+                        color: (_currentPage == 0) ? Colors.black : Colors.grey[600],
                       ),
                       label: "Home"
                   ),
@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                   BottomNavigationBarItem(
                     icon: CircleAvatar(
                       backgroundImage: dataSnapshot.data()["profile_pic"] == ""
-                          ? NetworkImage(profilePicURL)
+                          ? AssetImage("assets/images/no_profile_pic.png")
                           : NetworkImage(dataSnapshot.data()["profile_pic"]),
                       radius: 15.0,
                     ),

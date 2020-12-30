@@ -120,7 +120,7 @@ class _EditProfileState extends State<EditProfile> {
         child: CircleAvatar(
           backgroundImage: chosenProfileImage == null
               ? dataSnapshot.data()["profile_pic"] == ""
-                ? NetworkImage(profilePicURL)
+                ? AssetImage("assets/images/no_profile_pic.png")
                 : NetworkImage(dataSnapshot.data()["profile_pic"])
               : FileImage(chosenProfileImage),
           radius: 50.0,
