@@ -1,6 +1,9 @@
 class Posts {
-  String uid;
+  String downURL;
   String caption;
-  String likes;
-  String comments;
+  String location;
+  String ownerID;
+  DateTime timestamp;
+
+  Posts({this.downURL, this.caption, this.location, this.timestamp, this.ownerID});
 }

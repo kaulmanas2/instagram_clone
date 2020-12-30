@@ -46,6 +46,7 @@ class _SignInState extends State<SignIn> {
     var _appBarSize = 0;
     // var _appBarSize = appBar.preferredSize.height;
 
+    // TODO: Make ScrollView responsive using CustomScrollView
     return SafeArea(
       child: Scaffold(
         body: isLoading ? Loading() : SingleChildScrollView(

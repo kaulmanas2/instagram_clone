@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:instagram_clone/models/posts.dart';
 import 'package:uuid/uuid.dart';
 
 class DatabaseService {
@@ -24,7 +24,7 @@ class DatabaseService {
 
   Future updateUserProfilePicture(File profilePic) async {
     try {
-      Reference ref = FirebaseStorage.instance.ref(uid).child("profile_pic");
+      Reference ref = FirebaseStorage.instance.ref(uid).child("${uid}_profile_pic");
       UploadTask uploadTask = ref.putFile(profilePic);
       uploadTask.whenComplete(() async {
         String downURL = await uploadTask.snapshot.ref.getDownloadURL();
@@ -37,27 +37,39 @@ class DatabaseService {
       print(e.toString());
     }
   }
-  
+
   Future addNewPost(File post, String caption, String location) async {
-    try {
-      var uuid = Uuid().v1();
-      Reference ref = FirebaseStorage.instance.ref(uid).child("post_$uuid");
-      UploadTask uploadTask = ref.putFile(post);
-      uploadTask.whenComplete(() async {
-        String downURL = await uploadTask.snapshot.ref.getDownloadURL();
-        return await userPostsCollection.doc(uid).collection("posts").add({
-          "post_url": downURL,
-          "caption": caption,
-          "location": location,
-          "timestamp": DateTime.now()
+      try {
+        var uuid = Uuid().v1();
+        Reference ref = FirebaseStorage.instance.ref(uid).child("post_$uuid");
+        UploadTask uploadTask = ref.putFile(post);
+        uploadTask.whenComplete(() async {
+          String downURL = await uploadTask.snapshot.ref.getDownloadURL();
+          // return await userPostsCollection.doc(uid).collection("posts").add({
+          //   "post_url": downURL,
+          //   "caption": caption,
+          //   "location": location,
+          //   "timestamp": DateTime.now()
+          // });
+          return await userPostsCollection.add({
+            "caption": caption,
+            "location": location,
+            "post_url": downURL,
+            "owner_id" : uid,
+            "timestamp": DateTime.now()
+          }).then((DocumentReference docRef) {
+            String docID = docRef.id;
+            userPostsCollection.doc(uid).collection("posts").doc(docID).update({
+              "post_id" : docID
+            });
+          });
         });
-      });
-      print("Image Uploaded");
+        print("Image Uploaded");
+      }
+      catch (e) {
+        print(e.toString());
+      }
     }
-    catch (e) {
-      print(e.toString());
-    }
-  }
 
   Future updateUserProfileData(String username, String bio) async {
     return await userProfilesCollection.doc(uid).update({
@@ -75,5 +87,36 @@ class DatabaseService {
 
   Stream<DocumentSnapshot> get personalUserData {
     return userProfilesCollection.doc(uid).snapshots();
+  }
+
+  // Stream<List<Posts>> get userPosts {
+  //   return userPostsCollection.doc(uid).collection("posts").snapshots().map(_postListFromSnapshot);
+  // }
+
+  // List<Posts> _postListFromSnapshot(QuerySnapshot querySnapshot) {
+  //   return querySnapshot.docs.map((doc) {
+  //     return Posts(
+  //         caption: doc.data()["caption"].toString() ?? "",
+  //         location: doc.data()["location"].toString() ?? "",
+  //         downURL: doc.data()["post_url"].toString() ?? "",
+  //         timestamp: doc.data()["timestamp"] ?? ""
+  //     );
+  //   }).toList();
+  // }
+  
+  Stream<List<Posts>> get userPostsNew {
+    return userPostsCollection.where("owner_id", isEqualTo: uid).snapshots().map(_postListFromSnapshotNew);
+  }
+
+  List<Posts> _postListFromSnapshotNew(QuerySnapshot querySnapshot) {
+    return querySnapshot.docs.map((doc) {
+      return Posts(
+          caption: doc.data()["caption"].toString() ?? "",
+          location: doc.data()["location"].toString() ?? "",
+          downURL: doc.data()["post_url"].toString(),
+          ownerID: doc.data()["owner_id"].toString(),
+          timestamp: doc.data()["timestamp"].toDate(),
+      );
+    }).toList();
   }
 }

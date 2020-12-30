@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
     ProfilePage(), // Text('Index 4: Profile'),
   ];
 
-
+  // TODO: can use Provider -> value notifier to switch Bottom Navigation Page after post upload is complete
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(

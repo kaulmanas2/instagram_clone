@@ -146,7 +146,11 @@ class _UploadPostState extends State<UploadPost> {
     }
     catch (e) {
       print("ERROR ${e.toString()}");
+      setState(() {
+        print("Image not chosen");
+      });
     }
+    Navigator.pop(context);
   }
 
   Future openCamera() async {
@@ -159,7 +163,11 @@ class _UploadPostState extends State<UploadPost> {
     }
     catch (e) {
       print("ERROR");
+      setState(() {
+        print("Image not chosen");
+      });
     }
+    Navigator.pop(context);
   }
 
   void _showChangePictureOptionsSheet() {

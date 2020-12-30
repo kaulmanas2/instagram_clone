@@ -57,7 +57,7 @@ class _SignUpState extends State<SignUp> {
             color: Colors.white,
             child: Column(
               children: [
-                userIcon(),
+                userIcon(),   // change this to icon => Icons.account_circle_outlined
                 usernameField(),
                 emailField(),
                 passwordField(),
