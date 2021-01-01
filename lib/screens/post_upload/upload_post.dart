@@ -11,7 +11,6 @@ class UploadPost extends StatefulWidget {
 }
 
 class _UploadPostState extends State<UploadPost> {
-
   final AuthenticationService _authService = AuthenticationService();
 
   File chosenPostImage;
@@ -24,41 +23,31 @@ class _UploadPostState extends State<UploadPost> {
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(
+              icon: Icon(
                 Icons.clear,
-                color: Colors.black,
-                size: 35.0
-            ),
-            onPressed: () {
-              setState(() {
-                chosenPostImage = null;
-                picLocation = "";
-                picCaption = "";
-              });
-            }
-          ),
-          title: Text(
-            "Upload new Post",
-            style: TextStyle(
-                color: Colors.black
-            ),
-          ),
-          backgroundColor: Colors.white,
+                size: 35.0,
+              ),
+              onPressed: () {
+                setState(() {
+                  chosenPostImage = null;
+                  picLocation = "";
+                  picCaption = "";
+                });
+              }),
+          title: Text("Upload new Post"),
+          // backgroundColor: Colors.white,
           elevation: 0.0,
           actions: [
             IconButton(
               icon: Icon(
-                  Icons.check,
-                  color: Colors.lightBlue[700],
-                  size: 35.0
+                Icons.check,
+                color: Colors.lightBlue[700],
+                size: 35.0,
               ),
               onPressed: () async {
                 if (chosenPostImage != null) {
-                  var result = await DatabaseService(uid: _authService.uid).addNewPost(
-                    chosenPostImage,
-                    picCaption,
-                    picLocation
-                  );
+                  var result = await DatabaseService(uid: _authService.uid)
+                      .addNewPost(chosenPostImage, picCaption, picLocation);
                   if (result == null) {
                     setState(() {
                       chosenPostImage = null;
@@ -71,39 +60,36 @@ class _UploadPostState extends State<UploadPost> {
             ),
           ],
         ),
-
         body: Container(
           height: double.infinity,
-          color: Colors.white,
           child: SingleChildScrollView(
             child: Column(
               children: [
                 chosenPostImage == null
-                  ? Container(
-                    alignment: Alignment.topCenter,
-                    color: Colors.white,
-                    child: IconButton(
-                      iconSize: 300.0,
-                      icon: Icon(Icons.upload_rounded),
-                      onPressed: () {
-                        _showChangePictureOptionsSheet();
-                      },
-                    ),
-                  )
-                  : Container(
-                      alignment: Alignment.topCenter,
-                      color: Colors.white,
-                      child: Image(
-                        image: FileImage(chosenPostImage),
-                        height: 300.0,
-                        width: 300.0,
-                        fit: BoxFit.cover,
+                    ? Container(
+                        alignment: Alignment.topCenter,
+                        child: IconButton(
+                          iconSize: 300.0,
+                          icon: Icon(Icons.upload_rounded),
+                          onPressed: () {
+                            _showChangePictureOptionsSheet();
+                          },
+                        ),
+                      )
+                    : Container(
+                        alignment: Alignment.topCenter,
+                        child: Image(
+                          image: FileImage(chosenPostImage),
+                          height: 300.0,
+                          width: 300.0,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
-                  color: Colors.white,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 15.0,
+                    vertical: 5.0,
+                  ),
                   child: TextFormField(
                     decoration: InputDecoration(
                       prefixIcon: Icon(
@@ -116,10 +102,11 @@ class _UploadPostState extends State<UploadPost> {
                     },
                   ),
                 ),
-
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
-                  color: Colors.white,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 15.0,
+                    vertical: 5.0,
+                  ),
                   child: TextFormField(
                     decoration: InputDecoration(
                       prefixIcon: Icon(
@@ -147,8 +134,7 @@ class _UploadPostState extends State<UploadPost> {
         chosenPostImage = File(img.path);
         print("Got the image from gallery");
       });
-    }
-    catch (e) {
+    } catch (e) {
       print("ERROR ${e.toString()}");
       setState(() {
         print("Image not chosen");
@@ -164,8 +150,7 @@ class _UploadPostState extends State<UploadPost> {
         chosenPostImage = File(img.path);
         print("Got the image from camera");
       });
-    }
-    catch (e) {
+    } catch (e) {
       print("ERROR");
       setState(() {
         print("Image not chosen");
@@ -179,8 +164,7 @@ class _UploadPostState extends State<UploadPost> {
         context: context,
         builder: (context) {
           return changePicOptions();
-        }
-    );
+        });
   }
 
   Container changePicOptions() {
@@ -194,7 +178,7 @@ class _UploadPostState extends State<UploadPost> {
               child: Text(
                 "Upload Picture from Gallery",
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Theme.of(context).primaryColor,
                   fontSize: 18.0,
                 ),
               ),
@@ -207,7 +191,7 @@ class _UploadPostState extends State<UploadPost> {
               child: Text(
                 "Capture New Picture from Camera",
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Theme.of(context).primaryColor,
                   fontSize: 18.0,
                 ),
               ),

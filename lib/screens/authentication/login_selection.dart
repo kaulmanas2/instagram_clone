@@ -30,7 +30,6 @@ class _LoginSelectionState extends State<LoginSelection> {
               Expanded(
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                  color: Colors.white,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

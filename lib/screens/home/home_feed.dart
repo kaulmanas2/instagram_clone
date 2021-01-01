@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:instagram_clone/services/auth.dart';
-import 'package:instagram_clone/shared/constants.dart';
 
 class HomeFeed extends StatefulWidget {
   @override
@@ -9,7 +8,6 @@ class HomeFeed extends StatefulWidget {
 }
 
 class _HomeFeedState extends State<HomeFeed> {
-
   final AuthenticationService _authService = AuthenticationService();
 
   @override
@@ -22,18 +20,17 @@ class _HomeFeedState extends State<HomeFeed> {
             "Instagram Clone",
             style: TextStyle(
               fontFamily: "Billabong",
-              color: Colors.black,
-              fontSize: 30.0
+              fontSize: 30.0,
             ),
           ),
         ),
-        backgroundColor: Colors.white,
+        // backgroundColor: Theme.of(context).primaryColor,
         elevation: 1.0,
         actions: [
           IconButton(
             icon: Icon(
               AntDesign.search1,
-              color: Colors.black,
+              color: Theme.of(context).iconTheme.color,
               size: 30.0,
             ),
             onPressed: () => print("search button"),
@@ -41,7 +38,7 @@ class _HomeFeedState extends State<HomeFeed> {
           IconButton(
             icon: Icon(
               Feather.send,
-              color: Colors.black,
+              color: Theme.of(context).iconTheme.color,
               size: 30.0,
             ),
             onPressed: () => print("inbox button"),
@@ -49,7 +46,6 @@ class _HomeFeedState extends State<HomeFeed> {
         ],
       ),
       body: Container(
-        color: Colors.white,
         child: Center(
           child: RaisedButton(
             child: Text("Log Out"),

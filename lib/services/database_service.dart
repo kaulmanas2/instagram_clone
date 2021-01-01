@@ -45,12 +45,6 @@ class DatabaseService {
         UploadTask uploadTask = ref.putFile(post);
         uploadTask.whenComplete(() async {
           String downURL = await uploadTask.snapshot.ref.getDownloadURL();
-          // return await userPostsCollection.doc(uid).collection("posts").add({
-          //   "post_url": downURL,
-          //   "caption": caption,
-          //   "location": location,
-          //   "timestamp": DateTime.now()
-          // });
           return await userPostsCollection.add({
             "caption": caption,
             "location": location,
@@ -89,21 +83,6 @@ class DatabaseService {
     return userProfilesCollection.doc(uid).snapshots();
   }
 
-  // Stream<List<Posts>> get userPosts {
-  //   return userPostsCollection.doc(uid).collection("posts").snapshots().map(_postListFromSnapshot);
-  // }
-
-  // List<Posts> _postListFromSnapshot(QuerySnapshot querySnapshot) {
-  //   return querySnapshot.docs.map((doc) {
-  //     return Posts(
-  //         caption: doc.data()["caption"].toString() ?? "",
-  //         location: doc.data()["location"].toString() ?? "",
-  //         downURL: doc.data()["post_url"].toString() ?? "",
-  //         timestamp: doc.data()["timestamp"] ?? ""
-  //     );
-  //   }).toList();
-  // }
-  
   Stream<List<Posts>> get userPostsNew {
     return userPostsCollection.where("owner_id", isEqualTo: uid).snapshots().map(_postListFromSnapshotNew);
   }

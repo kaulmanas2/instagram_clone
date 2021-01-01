@@ -7,7 +7,6 @@ Container instaText() {
       "Instagram Clone",
       style: TextStyle(
           fontFamily: "Billabong",
-          color: Colors.black,
           fontSize: 70.0
       ),
     ),
@@ -18,7 +17,6 @@ Container languageSelection() {
   List<String> languages = ["English (United States)", "Hindi"];
   return Container(
     alignment: Alignment.center,
-    color: Colors.white,
     child: DropdownButtonHideUnderline(
       child: DropdownButton(
         items: languages.map((String value) {

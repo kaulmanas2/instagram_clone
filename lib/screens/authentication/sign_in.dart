@@ -6,8 +6,8 @@ import 'package:instagram_clone/shared/constants.dart';
 import 'package:instagram_clone/shared/loading.dart';
 
 class SignIn extends StatefulWidget {
-
   final Function switchView;
+
   SignIn({this.switchView});
 
   @override
@@ -15,7 +15,6 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-
   final AuthenticationService _authService = AuthenticationService();
 
   final List<String> languages = ["English (United States)", "Hindi"];
@@ -31,8 +30,7 @@ class _SignInState extends State<SignIn> {
     setState(() {
       if (email.isNotEmpty && password.isNotEmpty) {
         _isButtonEnabled = true;
-      }
-      else {
+      } else {
         _isButtonEnabled = false;
       }
     });
@@ -42,39 +40,43 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: isLoading ? Loading() : CustomScrollView(
-          slivers: [
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Container(
-                color: Colors.white,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                    children: [
-                      languageSelection(),
-                      Flexible(child: Container(), fit: FlexFit.loose),
-                      instaText(),
-                      emailField(),
-                      passwordField(),
-                      loginButton(),
-                      getHelpText(),
-                      orPartition(),
-                      loginWithFacebook(),
-                      Flexible(child: Container(), fit: FlexFit.loose),
-                      bottomSignUpBanner(),
-                    ]
-                ),
+        body: isLoading
+            ? Loading()
+            : CustomScrollView(
+                slivers: [
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Container(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          languageSelection(),
+                          Flexible(child: Container(), fit: FlexFit.loose),
+                          instaText(),
+                          emailField(),
+                          passwordField(),
+                          loginButton(),
+                          getHelpText(),
+                          orPartition(),
+                          loginWithFacebook(),
+                          Flexible(child: Container(), fit: FlexFit.loose),
+                          bottomSignUpBanner(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
 
   Container emailField() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+      padding: EdgeInsets.symmetric(
+        vertical: 5.0,
+        horizontal: 15.0,
+      ),
       height: 60.0,
       child: TextFormField(
         decoration: InputDecoration(
@@ -93,7 +95,10 @@ class _SignInState extends State<SignIn> {
 
   Container passwordField() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+      padding: EdgeInsets.symmetric(
+        vertical: 5.0,
+        horizontal: 15.0,
+      ),
       height: 60.0,
       child: TextFormField(
         obscureText: _obscureText,
@@ -101,12 +106,12 @@ class _SignInState extends State<SignIn> {
             border: OutlineInputBorder(),
             labelText: "Password",
             suffixIcon: GestureDetector(
-              child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
+              child:
+                  Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
               onTap: () {
                 setState(() => _obscureText = !_obscureText);
               },
-            )
-        ),
+            )),
         onChanged: (val) {
           setState(() {
             password = val.toString();
@@ -119,14 +124,17 @@ class _SignInState extends State<SignIn> {
 
   Container loginButton() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
+      padding: EdgeInsets.symmetric(
+        vertical: 15.0,
+        horizontal: 15.0,
+      ),
       height: 75.0,
       width: double.infinity,
       child: FlatButton(
         child: Text(
           "Log In",
           style: TextStyle(
-              color: Colors.white
+            color: Colors.white,
           ),
         ),
         color: Colors.lightBlue[700],
@@ -136,18 +144,19 @@ class _SignInState extends State<SignIn> {
         ),
         onPressed: _isButtonEnabled
             ? () async {
-          setState(() {
-            print("$email $password");
-            isLoading = true;
-          });
-          dynamic result = await _authService.signInWithEmailAndPassword(email, password);
-          if (result == null) {
-            setState(() {
-              print("Error Logging In");
-              isLoading = false;
-            });
-          }
-        }
+                setState(() {
+                  print("$email $password");
+                  isLoading = true;
+                });
+                dynamic result = await _authService.signInWithEmailAndPassword(
+                    email, password);
+                if (result == null) {
+                  setState(() {
+                    print("Error Logging In");
+                    isLoading = false;
+                  });
+                }
+              }
             : null,
       ),
     );
@@ -155,30 +164,35 @@ class _SignInState extends State<SignIn> {
 
   Container getHelpText() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+      padding: EdgeInsets.symmetric(
+        vertical: 10.0,
+        horizontal: 10.0,
+      ),
       alignment: Alignment.center,
       child: RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
           children: [
             TextSpan(
-                text: "Forgot your login details? ",
-                style: TextStyle(color: Colors.grey),
-                recognizer: TapGestureRecognizer()..onTap = () {
+              text: "Forgot your login details? ",
+              style: TextStyle(color: Colors.grey),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
                   print("Go get Help");
-                }
+                },
             ),
             TextSpan(
-                text: "Get help logging in.",
-                style: TextStyle(
-                  color: Colors.lightBlue[900],
-                  fontWeight: FontWeight.bold,
-                ),
-                recognizer: TapGestureRecognizer()..onTap = () {
+              text: "Get help logging in.",
+              style: TextStyle(
+                color: Colors.lightBlue[900],
+                fontWeight: FontWeight.bold,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
                   print("Go get Help");
-                }
+                },
             ),
-          ]
+          ],
         ),
       ),
     );
@@ -198,7 +212,12 @@ class _SignInState extends State<SignIn> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Expanded(child: Divider(indent: 15.0, thickness: 1.0)),
+          Expanded(
+            child: Divider(
+              indent: 15.0,
+              thickness: 1.0,
+            ),
+          ),
         ],
       ),
     );
@@ -211,8 +230,16 @@ class _SignInState extends State<SignIn> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ImageIcon(AssetImage("assets/images/fb_logo.png")),
-            Text("  Log In with facebook")
+            ImageIcon(
+              AssetImage("assets/images/fb_logo.png"),
+              color: Colors.blue,
+            ),
+            Text(
+              "  Log In with facebook",
+              style: TextStyle(
+                color: Colors.blue,
+              ),
+            )
           ],
         ),
         onPressed: () {
@@ -238,11 +265,12 @@ class _SignInState extends State<SignIn> {
                     TextSpan(
                       text: "Don't have an account? ",
                       style: TextStyle(color: Colors.grey),
-                      recognizer: TapGestureRecognizer()..onTap = () {
-                        setState(() {
-                          widget.switchView();
-                        });
-                      }
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          setState(() {
+                            widget.switchView();
+                          });
+                        },
                     ),
                     TextSpan(
                       text: "Sign up.",
@@ -250,13 +278,14 @@ class _SignInState extends State<SignIn> {
                         color: Colors.lightBlue[900],
                         fontWeight: FontWeight.bold,
                       ),
-                      recognizer: TapGestureRecognizer()..onTap = () {
-                        setState(() {
-                          widget.switchView();
-                        });
-                      }
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          setState(() {
+                            widget.switchView();
+                          });
+                        },
                     ),
-                  ]
+                  ],
                 ),
               ),
             ),

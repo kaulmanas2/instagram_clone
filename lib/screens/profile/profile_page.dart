@@ -7,7 +7,6 @@ import 'package:instagram_clone/models/posts.dart';
 import 'package:instagram_clone/screens/profile/edit_profile.dart';
 import 'package:instagram_clone/services/auth.dart';
 import 'package:instagram_clone/services/database_service.dart';
-import 'package:instagram_clone/shared/constants.dart';
 import 'package:instagram_clone/shared/loading.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +16,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
   final AuthenticationService _authService = AuthenticationService();
 
   bool isGridActive = true;
@@ -27,94 +25,86 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
-      stream: DatabaseService(uid: _authService.uid).personalUserData,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          personalUserDataSnapshot = snapshot.data;
-          return Scaffold(
-            appBar: AppBar(
-              leading: Icon(
-                  Feather.lock, color: Colors.black, size: 20.0),
-              title: Text(
-                personalUserDataSnapshot.data()["username"] ?? "error",
-                style: TextStyle(
-                  color: Colors.black,
+        stream: DatabaseService(uid: _authService.uid).personalUserData,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            personalUserDataSnapshot = snapshot.data;
+            return Scaffold(
+              appBar: AppBar(
+                leading: Icon(
+                  Feather.lock,
+                  size: 20.0,
                 ),
+                title: Text(
+                  personalUserDataSnapshot.data()["username"] ?? "error",
+                ),
+                elevation: 1.0,
               ),
-              backgroundColor: Colors.white,
-              elevation: 1.0,
-              iconTheme: IconThemeData(color: Colors.black),
-            ),
-
-            endDrawer: Drawer(
-              child: Container(
-                color: Colors.white,
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    Container(
-                      height: 65.0,
-                      child: DrawerHeader(
-                        child: Text(
-                          personalUserDataSnapshot.data()["username"] ?? "error",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
+              endDrawer: Drawer(
+                child: Container(
+                  // color: Colors.white,
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: [
+                      Container(
+                        height: 65.0,
+                        child: DrawerHeader(
+                          child: Text(
+                            personalUserDataSnapshot.data()["username"] ??
+                                "error",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    ListTile(
-                      title: Text("Log out"),
-                      onTap: () async {
-                        dynamic result = await _authService.signOut();
-                        if (result == null) {
-                          print("Error in logging out");
-                        }
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
+                      ListTile(
+                        title: Text("Log out"),
+                        onTap: () async {
+                          dynamic result = await _authService.signOut();
+                          if (result == null) {
+                            print("Error in logging out");
+                          }
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-
-            body: NestedScrollView(
-              headerSliverBuilder: (context, value) {
-                return [
-                  SliverToBoxAdapter(
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              profilePicture(),
-                              socialDetails(),
-                            ],
-                          ),
-                          userDisplayName(),
-                          userBio(),
-                          editProfileButton(),
-                        ],
+              body: NestedScrollView(
+                headerSliverBuilder: (context, value) {
+                  return [
+                    SliverToBoxAdapter(
+                      child: Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                profilePicture(),
+                                socialDetails(),
+                              ],
+                            ),
+                            userDisplayName(),
+                            userBio(),
+                            editProfileButton(),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ];
-              },
+                  ];
+                },
 
-              // body: tabBarView(), // use this to make UI look exactly like original instagram app
-              body: postsTabBarView(),
-            ),
-          );
-        }
-        else {
-          return Loading();
-        }
-      }
-    );
+                // body: tabBarView(), // use this to make UI look exactly like original instagram app
+                body: postsTabBarView(),
+              ),
+            );
+          } else {
+            return Loading();
+          }
+        });
   }
 
   Container profilePicture() {
@@ -155,12 +145,15 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+          padding: EdgeInsets.symmetric(
+            horizontal: 15.0,
+            vertical: 5.0,
+          ),
           child: Text(
             "${postsList.length}",
             style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0
+              fontWeight: FontWeight.bold,
+              fontSize: 20.0,
             ),
           ),
         ),
@@ -176,12 +169,15 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+          padding: EdgeInsets.symmetric(
+            horizontal: 15.0,
+            vertical: 5.0,
+          ),
           child: Text(
             "${personalUserDataSnapshot.data()["followers"].length}",
             style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0
+              fontWeight: FontWeight.bold,
+              fontSize: 20.0,
             ),
           ),
         ),
@@ -197,12 +193,15 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+          padding: EdgeInsets.symmetric(
+            horizontal: 15.0,
+            vertical: 5.0,
+          ),
           child: Text(
             "${personalUserDataSnapshot.data()["following"].length}",
             style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0
+              fontWeight: FontWeight.bold,
+              fontSize: 20.0,
             ),
           ),
         ),
@@ -217,15 +216,14 @@ class _ProfilePageState extends State<ProfilePage> {
   Container userDisplayName() {
     if (_authService.displayName == null || _authService.displayName == "") {
       return Container();
-    }
-    else {
+    } else {
       return Container(
         padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 5.0),
         child: Text(
           _authService.displayName ?? "",
           style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15.0
+            fontWeight: FontWeight.bold,
+            fontSize: 15.0,
           ),
         ),
       );
@@ -233,10 +231,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Container userBio() {
-    if (personalUserDataSnapshot.data()["bio"] == null || personalUserDataSnapshot.data()["bio"] == "") {
+    if (personalUserDataSnapshot.data()["bio"] == null ||
+        personalUserDataSnapshot.data()["bio"] == "") {
       return Container();
-    }
-    else {
+    } else {
       return Container(
         padding: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 0.0),
         child: Text(
@@ -254,16 +252,14 @@ class _ProfilePageState extends State<ProfilePage> {
       child: OutlineButton(
         child: Text(
           "Edit Profile",
-          style: TextStyle(
-            color: Colors.black,
-          ),
+          style: TextStyle(),
         ),
-        color: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5.0),
         ),
         onPressed: () async {
-          await Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile()));
+          await Navigator.push(
+              context, MaterialPageRoute(builder: (context) => EditProfile()));
           setState(() {});
         },
       ),
@@ -273,7 +269,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Container postsTabBarView() {
     return Container(
       alignment: Alignment.topCenter,
-      color: Colors.white,
       child: Column(
         children: [
           Row(
@@ -283,7 +278,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: IconButton(
                   icon: Icon(
                     Icons.grid_on,
-                    color: isGridActive ? Colors.black : Colors.grey[600],
+                    color: isGridActive
+                        ? Theme.of(context).iconTheme.color
+                        : Colors.grey[600],
                   ),
                   onPressed: () {
                     setState(() => isGridActive = true);
@@ -294,7 +291,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: IconButton(
                   icon: Icon(
                     Icons.list,
-                    color: isGridActive ? Colors.grey[600] : Colors.black,
+                    color: isGridActive
+                        ? Colors.grey[600]
+                        : Theme.of(context).iconTheme.color,
                   ),
                   onPressed: () {
                     setState(() => isGridActive = false);
@@ -320,16 +319,13 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Text(
             "No posts uploaded",
             style: TextStyle(
-              color: Colors.black,
-              fontSize: 20.0
+              fontSize: 20.0,
             ),
           ),
         ),
       );
-    }
-    else {
+    } else {
       return Container(
-        color: Colors.white,
         child: GridView.count(
           crossAxisCount: 3,
           children: postsList.map((post) {
@@ -337,15 +333,18 @@ class _ProfilePageState extends State<ProfilePage> {
               imageUrl: post.downURL,
               imageBuilder: (context, imageProvider) => Container(
                 padding: EdgeInsets.all(1.0),
-                child: Image(image: imageProvider,fit: BoxFit.cover,)
+                child: Image(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                ),
               ),
               placeholder: (context, url) => Container(
                 padding: EdgeInsets.all(1.0),
                 color: Colors.grey[100],
               ),
               errorWidget: (context, url, error) => Container(
-                  padding: EdgeInsets.all(1.0),
-                  child: Image.asset("assets/images/no_profile_pic.png")
+                padding: EdgeInsets.all(1.0),
+                child: Image.asset("assets/images/no_profile_pic.png"),
               ),
             );
           }).toList(),
@@ -358,7 +357,6 @@ class _ProfilePageState extends State<ProfilePage> {
     final postsList = Provider.of<List<Posts>>(context) ?? [];
     postsList.reversed.toList();
     return Container(
-      color: Colors.white,
       child: ListView.builder(
         itemCount: postsList.length,
         itemBuilder: (context, index) {
@@ -376,7 +374,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Container listPostsTop(int index, List<Posts> postsList) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15.0),
+      padding: EdgeInsets.fromLTRB(15.0, 0.0, 10.0, 0.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -389,11 +387,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   radius: 15.0,
                 ),
                 placeholder: (context, url) => CircleAvatar(
-                  backgroundImage: AssetImage("assets/images/no_profile_pic.png"),
+                  backgroundImage:
+                      AssetImage("assets/images/no_profile_pic.png"),
                   radius: 15.0,
                 ),
                 errorWidget: (context, url, error) => CircleAvatar(
-                  backgroundImage: AssetImage("assets/images/no_profile_pic.png"),
+                  backgroundImage:
+                      AssetImage("assets/images/no_profile_pic.png"),
                   radius: 15.0,
                 ),
               ),
@@ -404,22 +404,16 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Text(
                       personalUserDataSnapshot.data()["username"],
                       style: TextStyle(
-                        color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                   postsList[index].location == ""
-                  ? Container()
-                  : Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Text(
-                      postsList[index].location,
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
+                      ? Container()
+                      : Container(
+                          padding: EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Text(postsList[index].location),
+                        ),
                 ],
               ),
             ],
@@ -438,8 +432,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Container listPostsMid(int index, List<Posts> postsList) {
     if (postsList.isEmpty) {
       return Container(child: Loading());
-    }
-    else {
+    } else {
       return Container(
         height: MediaQuery.of(context).size.width,
         width: MediaQuery.of(context).size.width,
@@ -447,12 +440,15 @@ class _ProfilePageState extends State<ProfilePage> {
         child: CachedNetworkImage(
           imageUrl: postsList[index].downURL,
           imageBuilder: (context, imageProvider) => Container(
-              padding: EdgeInsets.all(1.0),
-              child: Image(image: imageProvider,fit: BoxFit.cover,)
+            padding: EdgeInsets.all(1.0),
+            child: Image(
+              image: imageProvider,
+              fit: BoxFit.cover,
+            ),
           ),
           placeholder: (context, url) => Container(
-              padding: EdgeInsets.all(1.0),
-              color: Colors.grey[100],
+            padding: EdgeInsets.all(1.0),
+            color: Colors.grey[100],
           ),
           errorWidget: (context, url, error) => Container(
             padding: EdgeInsets.all(1.0),
@@ -509,70 +505,59 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
-
           postsList[index].caption == ""
-           ? Container()
-           : Container(
-                padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 5.0),
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "${postsList[index].caption}",
-                  style: TextStyle(
-                    color: Colors.black,
+              ? Container()
+              : Container(
+                  padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 5.0),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "${postsList[index].caption}",
                   ),
-                )
-            ),
+                ),
           Container(
             padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 15.0),
             alignment: Alignment.centerLeft,
             child: Text(
               "${postsList[index].timestamp.day}/${postsList[index].timestamp.month}/${postsList[index].timestamp.year}",
-              style: TextStyle(
-                color: Colors.grey[700],
-              ),
-            )
+            ),
           ),
         ],
       ),
     );
   }
 
-
-
-  // // this tab bar looks exactly the same but hinders in nested scrolling
-  // DefaultTabController tabBarView() {
-  //   return DefaultTabController(
-  //       length: 2,
-  //       initialIndex: 0,
-  //       child: Scaffold(
-  //         appBar: AppBar(
-  //           elevation: 0.0,
-  //           backgroundColor: Colors.white,
-  //           flexibleSpace: TabBar(
-  //             indicatorColor: Colors.black,
-  //             tabs: [
-  //               Tab(
-  //                 icon: Icon(
-  //                   Icons.grid_on,
-  //                   color: Colors.black,
-  //                 ),
-  //               ),
-  //               Tab(
-  //                 icon: Icon(
-  //                   Icons.list,
-  //                   color: Colors.black,
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //         body: TabBarView(
-  //           children: [
-  //             gridPosts(postsList),
-  //             listPosts(),
-  //           ],
-  //         ),
-  //       )
-  //   );
-  // }
+// // this tab bar looks exactly the same but hinders in nested scrolling
+// DefaultTabController tabBarView() {
+//   return DefaultTabController(
+//       length: 2,
+//       initialIndex: 0,
+//       child: Scaffold(
+//         appBar: AppBar(
+//           elevation: 0.0,
+//           backgroundColor: Colors.white,
+//           flexibleSpace: TabBar(
+//             indicatorColor: Colors.black,
+//             tabs: [
+//               Tab(
+//                 icon: Icon(
+//                   Icons.grid_on,
+//                 ),
+//               ),
+//               Tab(
+//                 icon: Icon(
+//                   Icons.list,
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//         body: TabBarView(
+//           children: [
+//             gridPosts(postsList),
+//             listPosts(),
+//           ],
+//         ),
+//       )
+//   );
+// }
 }

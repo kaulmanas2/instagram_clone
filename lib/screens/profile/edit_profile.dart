@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram_clone/services/auth.dart';
 import 'package:instagram_clone/services/database_service.dart';
-import 'package:instagram_clone/shared/constants.dart';
 import 'package:instagram_clone/shared/loading.dart';
 
 class EditProfile extends StatefulWidget {
@@ -16,7 +14,6 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-
   final AuthenticationService _authService = AuthenticationService();
 
   DocumentSnapshot dataSnapshot;
@@ -41,77 +38,73 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return  StreamBuilder<DocumentSnapshot>(
-      stream: DatabaseService(uid: _authService.uid).personalUserData,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          dataSnapshot = snapshot.data;
-          return Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                icon: Icon(
-                    Icons.clear,
-                    color: Colors.black,
-                    size: 35.0
-                ),
-                onPressed: isButtonEnabled
-                  ? () {
-                      Navigator.pop(context);
-                    }
-                  : null,
-              ),
-              title: Text(
-                "Edit Profile",
-                style: TextStyle(
-                    color: Colors.black
-                ),
-              ),
-              backgroundColor: Colors.white,
-              elevation: 0.0,
-              actions: [
-                IconButton(
+    return StreamBuilder<DocumentSnapshot>(
+        stream: DatabaseService(uid: _authService.uid).personalUserData,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            dataSnapshot = snapshot.data;
+            return Scaffold(
+              appBar: AppBar(
+                leading: IconButton(
                   icon: Icon(
-                      Icons.check,
-                      color: Colors.lightBlue[700],
-                      size: 35.0
+                    Icons.clear,
+                    size: 35.0,
                   ),
                   onPressed: isButtonEnabled
-                    ? () async {
-                      print("Change Name, Username, Bio");
-                      username = username ?? dataSnapshot.data()["username"];
-                      bio = bio ?? dataSnapshot.data()["bio"];
-                      setState(() => isButtonEnabled = false);
-                      await _authService.setDisplayName(displayName);
-                      await DatabaseService(uid: _authService.uid).updateUserProfileData(username, bio);
-                      Navigator.pop(context, true);
-                    }
-                  : null,
+                      ? () {
+                          Navigator.pop(context);
+                        }
+                      : null,
                 ),
-              ],
-            ),
-
-            body: Container(
-              height: double.infinity,
-              color: Colors.white,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    profilePicture(),
-                    changeProfilePicture(),
-                    nameField(),
-                    usernameField(),
-                    bioField(),
-                  ],
+                title: Text(
+                  "Edit Profile",
+                  style: TextStyle(
+                      ),
+                ),
+                // backgroundColor: Colors.white,
+                elevation: 0.0,
+                actions: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.check,
+                      color: Colors.lightBlue[700],
+                      size: 35.0,
+                    ),
+                    onPressed: isButtonEnabled
+                        ? () async {
+                            print("Change Name, Username, Bio");
+                            username =
+                                username ?? dataSnapshot.data()["username"];
+                            bio = bio ?? dataSnapshot.data()["bio"];
+                            setState(() => isButtonEnabled = false);
+                            await _authService.setDisplayName(displayName);
+                            await DatabaseService(uid: _authService.uid)
+                                .updateUserProfileData(username, bio);
+                            Navigator.pop(context, true);
+                          }
+                        : null,
+                  ),
+                ],
+              ),
+              body: Container(
+                height: double.infinity,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      profilePicture(),
+                      changeProfilePicture(),
+                      nameField(),
+                      usernameField(),
+                      bioField(),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        }
-        else {
-          return Loading();
-        }
-      }
-    );
+            );
+          } else {
+            return Loading();
+          }
+        });
   }
 
   Container profilePicture() {
@@ -122,15 +115,15 @@ class _EditProfileState extends State<EditProfile> {
           imageUrl: dataSnapshot.data()["profile_pic"],
           imageBuilder: (context, imageProvider) => CircleAvatar(
             backgroundImage: imageProvider,
-            radius: 40.0,
+            radius: 80.0,
           ),
           placeholder: (context, url) => CircleAvatar(
             backgroundImage: AssetImage("assets/images/no_profile_pic.png"),
-            radius: 40.0,
+            radius: 80.0,
           ),
           errorWidget: (context, url, error) => CircleAvatar(
             backgroundImage: AssetImage("assets/images/no_profile_pic.png"),
-            radius: 40.0,
+            radius: 80.0,
           ),
         ),
       ),
@@ -148,16 +141,16 @@ class _EditProfileState extends State<EditProfile> {
           ),
         ),
         onPressed: () => _showChangePictureOptionsSheet(),
-      )
+      ),
     );
   }
 
   Future updateProfilePic(File profilePic) async {
     try {
-      await DatabaseService(uid: _authService.uid).updateUserProfilePicture(profilePic);
+      await DatabaseService(uid: _authService.uid)
+          .updateUserProfilePicture(profilePic);
       print("Image Uploaded");
-    }
-    catch(e) {
+    } catch (e) {
       print(e.toString());
     }
   }
@@ -168,14 +161,13 @@ class _EditProfileState extends State<EditProfile> {
       dynamic img = await ImagePicker().getImage(source: ImageSource.gallery);
       setState(() {
         chosenProfileImage = File(img.path);
-        print("Image Choosen from gallery");
+        print("Image Chosen from gallery");
         updateProfilePic(chosenProfileImage);
       });
-    }
-    catch(e) {
-      print("ERROR HAS OCCURED ${e.toString()}");
+    } catch (e) {
+      print("ERROR HAS OCCURRED ${e.toString()}");
       setState(() {
-        print("Image not Choosen");
+        print("Image not Chosen");
       });
     }
     Navigator.pop(context);
@@ -186,11 +178,10 @@ class _EditProfileState extends State<EditProfile> {
       dynamic img = await ImagePicker().getImage(source: ImageSource.camera);
       setState(() {
         chosenProfileImage = File(img.path);
-        print("Image Choosen from camera");
+        print("Image Chosen from camera");
         updateProfilePic(chosenProfileImage);
       });
-    }
-    catch(e) {
+    } catch (e) {
       setState(() {
         print("Image not Choosen");
       });
@@ -200,10 +191,10 @@ class _EditProfileState extends State<EditProfile> {
 
   void _showChangePictureOptionsSheet() {
     showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return changePicOptions();
-        }
+      context: context,
+      builder: (context) {
+        return changePicOptions();
+      },
     );
   }
 
@@ -218,7 +209,7 @@ class _EditProfileState extends State<EditProfile> {
               child: Text(
                 "Upload Picture from Gallery",
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Theme.of(context).primaryColor,
                   fontSize: 18.0,
                 ),
               ),
@@ -231,7 +222,7 @@ class _EditProfileState extends State<EditProfile> {
               child: Text(
                 "Capture New Picture from Camera",
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Theme.of(context).primaryColor,
                   fontSize: 18.0,
                 ),
               ),

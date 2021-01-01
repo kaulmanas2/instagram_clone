@@ -7,17 +7,14 @@ import 'package:instagram_clone/screens/post_upload/upload_post.dart';
 import 'package:instagram_clone/screens/profile/profile_page.dart';
 import 'package:instagram_clone/services/auth.dart';
 import 'package:instagram_clone/services/database_service.dart';
-import 'package:instagram_clone/shared/constants.dart';
 import 'package:instagram_clone/shared/loading.dart';
 
 class HomePage extends StatefulWidget {
-
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
   final AuthenticationService _authService = AuthenticationService();
   GlobalKey bottomNavBarKey = GlobalKey();
   DocumentSnapshot dataSnapshot;
@@ -39,56 +36,44 @@ class _HomePageState extends State<HomePage> {
     return StreamBuilder<DocumentSnapshot>(
       stream: DatabaseService(uid: _authService.uid).personalUserData,
       builder: (context, snapshot) {
-        if(snapshot.hasData) {
+        if (snapshot.hasData) {
           dataSnapshot = snapshot.data;
           return SafeArea(
             child: Scaffold(
               body: Container(
-                color: Colors.white,
                 child: tabBarContent[currentIndex],
               ),
               bottomNavigationBar: BottomNavigationBar(
                 key: bottomNavBarKey,
-                backgroundColor: Colors.white,
+                // backgroundColor: Colors.white,
                 currentIndex: currentIndex,
                 items: [
                   BottomNavigationBarItem(
-                      icon: Icon(
-                        AntDesign.home,
-                        size: 25.0,
-                        color: (_currentPage == 0) ? Colors.black : Colors.grey[600],
-                      ),
-                      label: "Home"
+                    icon: Icon(
+                      AntDesign.home,
+                      size: 25.0,
+                    ),
+                    label: "Home",
                   ),
-
                   BottomNavigationBarItem(
-                      icon: Icon(
-                        Icons.video_collection_outlined,
-                        color: (_currentPage == 1) ? Colors.black : Colors
-                            .grey[600],
-                      ),
-                      label: "Reels"
+                    icon: Icon(
+                      Icons.video_collection_outlined,
+                    ),
+                    label: "Reels",
                   ),
-
                   BottomNavigationBarItem(
-                      icon: Icon(
-                        Ionicons.ios_add_circle_outline,
-                        size: 30.0,
-                        color: (_currentPage == 2) ? Colors.black : Colors
-                            .grey[600],
-                      ),
-                      label: "Upload"
+                    icon: Icon(
+                      Ionicons.ios_add_circle_outline,
+                      size: 30.0,
+                    ),
+                    label: "Upload",
                   ),
-
                   BottomNavigationBarItem(
-                      icon: Icon(
-                        AntDesign.hearto,
-                        color: (_currentPage == 3) ? Colors.black : Colors
-                            .grey[600],
-                      ),
-                      label: "Likes"
+                    icon: Icon(
+                      AntDesign.hearto,
+                    ),
+                    label: "Likes",
                   ),
-
                   BottomNavigationBarItem(
                     icon: CachedNetworkImage(
                       imageUrl: dataSnapshot.data()["profile_pic"],
@@ -97,11 +82,13 @@ class _HomePageState extends State<HomePage> {
                         radius: 15.0,
                       ),
                       placeholder: (context, url) => CircleAvatar(
-                        backgroundImage: AssetImage("assets/images/no_profile_pic.png"),
+                        backgroundImage:
+                            AssetImage("assets/images/no_profile_pic.png"),
                         radius: 15.0,
                       ),
                       errorWidget: (context, url, error) => CircleAvatar(
-                        backgroundImage: AssetImage("assets/images/no_profile_pic.png"),
+                        backgroundImage:
+                            AssetImage("assets/images/no_profile_pic.png"),
                         radius: 15.0,
                       ),
                     ),
@@ -121,11 +108,10 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           );
-        }
-        else {
+        } else {
           return Loading();
         }
-      }
+      },
     );
   }
 }
