@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -89,11 +90,20 @@ class _HomePageState extends State<HomePage> {
                   ),
 
                   BottomNavigationBarItem(
-                    icon: CircleAvatar(
-                      backgroundImage: dataSnapshot.data()["profile_pic"] == ""
-                          ? AssetImage("assets/images/no_profile_pic.png")
-                          : NetworkImage(dataSnapshot.data()["profile_pic"]),
-                      radius: 15.0,
+                    icon: CachedNetworkImage(
+                      imageUrl: dataSnapshot.data()["profile_pic"],
+                      imageBuilder: (context, imageProvider) => CircleAvatar(
+                        backgroundImage: imageProvider,
+                        radius: 15.0,
+                      ),
+                      placeholder: (context, url) => CircleAvatar(
+                        backgroundImage: AssetImage("assets/images/no_profile_pic.png"),
+                        radius: 15.0,
+                      ),
+                      errorWidget: (context, url, error) => CircleAvatar(
+                        backgroundImage: AssetImage("assets/images/no_profile_pic.png"),
+                        radius: 15.0,
+                      ),
                     ),
                     label: "Profile",
                   ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -119,11 +120,20 @@ class _ProfilePageState extends State<ProfilePage> {
   Container profilePicture() {
     return Container(
       padding: EdgeInsets.all(25.0),
-      child: CircleAvatar(
-        backgroundImage: personalUserDataSnapshot.data()["profile_pic"] == ""
-          ? AssetImage("assets/images/no_profile_pic.png")
-          : NetworkImage(personalUserDataSnapshot.data()["profile_pic"]),
-        radius: 40.0,
+      child: CachedNetworkImage(
+        imageUrl: personalUserDataSnapshot.data()["profile_pic"],
+        imageBuilder: (context, imageProvider) => CircleAvatar(
+          backgroundImage: imageProvider,
+          radius: 40.0,
+        ),
+        placeholder: (context, url) => CircleAvatar(
+          backgroundImage: AssetImage("assets/images/no_profile_pic.png"),
+          radius: 40.0,
+        ),
+        errorWidget: (context, url, error) => CircleAvatar(
+          backgroundImage: AssetImage("assets/images/no_profile_pic.png"),
+          radius: 40.0,
+        ),
       ),
     );
   }
@@ -323,9 +333,20 @@ class _ProfilePageState extends State<ProfilePage> {
         child: GridView.count(
           crossAxisCount: 3,
           children: postsList.map((post) {
-            return Container(
-              padding: EdgeInsets.all(1.0),
-              child: Image.network(post.downURL, fit: BoxFit.cover),
+            return CachedNetworkImage(
+              imageUrl: post.downURL,
+              imageBuilder: (context, imageProvider) => Container(
+                padding: EdgeInsets.all(1.0),
+                child: Image(image: imageProvider,fit: BoxFit.cover,)
+              ),
+              placeholder: (context, url) => Container(
+                padding: EdgeInsets.all(1.0),
+                color: Colors.grey[100],
+              ),
+              errorWidget: (context, url, error) => Container(
+                  padding: EdgeInsets.all(1.0),
+                  child: Image.asset("assets/images/no_profile_pic.png")
+              ),
             );
           }).toList(),
         ),
@@ -361,12 +382,20 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                backgroundImage: personalUserDataSnapshot.data()["profile_pic"] == ""
-                  ? AssetImage("assets/images/no_profile_pic.png")
-                  : NetworkImage(personalUserDataSnapshot.data()["profile_pic"]),
-                // backgroundImage: NetworkImage(profilePicURL),
-                radius: 15.0,
+              CachedNetworkImage(
+                imageUrl: personalUserDataSnapshot.data()["profile_pic"],
+                imageBuilder: (context, imageProvider) => CircleAvatar(
+                  backgroundImage: imageProvider,
+                  radius: 15.0,
+                ),
+                placeholder: (context, url) => CircleAvatar(
+                  backgroundImage: AssetImage("assets/images/no_profile_pic.png"),
+                  radius: 15.0,
+                ),
+                errorWidget: (context, url, error) => CircleAvatar(
+                  backgroundImage: AssetImage("assets/images/no_profile_pic.png"),
+                  radius: 15.0,
+                ),
               ),
               Column(
                 children: [
@@ -415,8 +444,23 @@ class _ProfilePageState extends State<ProfilePage> {
         height: MediaQuery.of(context).size.width,
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.all(1.0),
-        child: Image.network(
-          postsList[index].downURL, fit: BoxFit.cover),
+        child: CachedNetworkImage(
+          imageUrl: postsList[index].downURL,
+          imageBuilder: (context, imageProvider) => Container(
+              padding: EdgeInsets.all(1.0),
+              child: Image(image: imageProvider,fit: BoxFit.cover,)
+          ),
+          placeholder: (context, url) => Container(
+              padding: EdgeInsets.all(1.0),
+              color: Colors.grey[100],
+          ),
+          errorWidget: (context, url, error) => Container(
+            padding: EdgeInsets.all(1.0),
+            child: Center(
+              child: Text("Error Loading Post"),
+            ),
+          ),
+        ),
       );
     }
   }

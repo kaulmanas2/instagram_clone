@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -117,13 +118,20 @@ class _EditProfileState extends State<EditProfile> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 15.0),
       child: Center(
-        child: CircleAvatar(
-          backgroundImage: chosenProfileImage == null
-              ? dataSnapshot.data()["profile_pic"] == ""
-                ? AssetImage("assets/images/no_profile_pic.png")
-                : NetworkImage(dataSnapshot.data()["profile_pic"])
-              : FileImage(chosenProfileImage),
-          radius: 50.0,
+        child: CachedNetworkImage(
+          imageUrl: dataSnapshot.data()["profile_pic"],
+          imageBuilder: (context, imageProvider) => CircleAvatar(
+            backgroundImage: imageProvider,
+            radius: 40.0,
+          ),
+          placeholder: (context, url) => CircleAvatar(
+            backgroundImage: AssetImage("assets/images/no_profile_pic.png"),
+            radius: 40.0,
+          ),
+          errorWidget: (context, url, error) => CircleAvatar(
+            backgroundImage: AssetImage("assets/images/no_profile_pic.png"),
+            radius: 40.0,
+          ),
         ),
       ),
     );
