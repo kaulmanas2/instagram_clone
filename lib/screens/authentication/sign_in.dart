@@ -52,7 +52,7 @@ class _SignInState extends State<SignIn> {
                         children: [
                           languageSelection(),
                           Flexible(child: Container(), fit: FlexFit.loose),
-                          instaText(),
+                          instaText(context),
                           emailField(),
                           passwordField(),
                           loginButton(),

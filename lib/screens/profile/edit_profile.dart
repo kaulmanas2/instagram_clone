@@ -58,8 +58,7 @@ class _EditProfileState extends State<EditProfile> {
                 ),
                 title: Text(
                   "Edit Profile",
-                  style: TextStyle(
-                      ),
+                  style: TextStyle(),
                 ),
                 // backgroundColor: Colors.white,
                 elevation: 0.0,
@@ -111,21 +110,28 @@ class _EditProfileState extends State<EditProfile> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 15.0),
       child: Center(
-        child: CachedNetworkImage(
-          imageUrl: dataSnapshot.data()["profile_pic"],
-          imageBuilder: (context, imageProvider) => CircleAvatar(
-            backgroundImage: imageProvider,
-            radius: 80.0,
-          ),
-          placeholder: (context, url) => CircleAvatar(
-            backgroundImage: AssetImage("assets/images/no_profile_pic.png"),
-            radius: 80.0,
-          ),
-          errorWidget: (context, url, error) => CircleAvatar(
-            backgroundImage: AssetImage("assets/images/no_profile_pic.png"),
-            radius: 80.0,
-          ),
-        ),
+        child: chosenProfileImage != null
+            ? CircleAvatar(
+                backgroundImage: FileImage(chosenProfileImage),
+                radius: 50.0,
+              )
+            : CachedNetworkImage(
+                imageUrl: dataSnapshot.data()["profile_pic"],
+                imageBuilder: (context, imageProvider) => CircleAvatar(
+                  backgroundImage: imageProvider,
+                  radius: 80.0,
+                ),
+                placeholder: (context, url) => CircleAvatar(
+                  backgroundImage:
+                      AssetImage("assets/images/no_profile_pic.png"),
+                  radius: 80.0,
+                ),
+                errorWidget: (context, url, error) => CircleAvatar(
+                  backgroundImage:
+                      AssetImage("assets/images/no_profile_pic.png"),
+                  radius: 80.0,
+                ),
+              ),
       ),
     );
   }

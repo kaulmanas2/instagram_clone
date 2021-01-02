@@ -73,31 +73,31 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               body: NestedScrollView(
-                headerSliverBuilder: (context, value) {
-                  return [
-                    SliverToBoxAdapter(
-                      child: Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                profilePicture(),
-                                socialDetails(),
-                              ],
-                            ),
-                            userDisplayName(),
-                            userBio(),
-                            editProfileButton(),
-                          ],
-                        ),
+                headerSliverBuilder: (context, value) => [
+                  SliverToBoxAdapter(
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              profilePicture(),
+                              socialDetails(),
+                            ],
+                          ),
+                          userDisplayName(),
+                          userBio(),
+                          editProfileButton(),
+                        ],
                       ),
                     ),
-                  ];
-                },
+                  ),
+                ],
 
-                // body: tabBarView(), // use this to make UI look exactly like original instagram app
+                // use this to make UI look exactly like original instagram app
+                // body: tabBarView(),
+
                 body: postsTabBarView(),
               ),
             );
@@ -526,38 +526,32 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-// // this tab bar looks exactly the same but hinders in nested scrolling
-// DefaultTabController tabBarView() {
-//   return DefaultTabController(
-//       length: 2,
-//       initialIndex: 0,
-//       child: Scaffold(
-//         appBar: AppBar(
-//           elevation: 0.0,
-//           backgroundColor: Colors.white,
-//           flexibleSpace: TabBar(
-//             indicatorColor: Colors.black,
-//             tabs: [
-//               Tab(
-//                 icon: Icon(
-//                   Icons.grid_on,
-//                 ),
-//               ),
-//               Tab(
-//                 icon: Icon(
-//                   Icons.list,
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//         body: TabBarView(
-//           children: [
-//             gridPosts(postsList),
-//             listPosts(),
-//           ],
-//         ),
-//       )
-//   );
-// }
+  // this tab bar looks exactly the same but hinders in scrolling with sliver
+  // the silver above does not collapse when grid/list view scrolled
+  DefaultTabController tabBarView() {
+    return DefaultTabController(
+      length: 2,
+      initialIndex: 0,
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0.0,
+          // backgroundColor: Colors.white,
+          flexibleSpace: TabBar(
+            labelColor: Theme.of(context).primaryColor,
+            unselectedLabelColor: Colors.grey,
+            tabs: [
+              Tab(icon: Icon(Icons.grid_on)),
+              Tab(icon: Icon(Icons.list)),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            gridPosts(),
+            listPosts(),
+          ],
+        ),
+      ),
+    );
+  }
 }

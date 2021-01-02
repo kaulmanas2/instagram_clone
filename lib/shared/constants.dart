@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
 
-Container instaText() {
+Container instaText(BuildContext context) {
   return Container(
-    padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
-    child: Text(
-      "Instagram Clone",
-      style: TextStyle(
-          fontFamily: "Billabong",
-          fontSize: 70.0
-      ),
+    child: Column(
+      children: [
+        Text(
+          "Instagram",
+          style: TextStyle(
+            fontFamily: "Billabong",
+            fontSize: 60.0,
+          ),
+        ),
+        Text(
+          "Clone",
+          style: TextStyle(
+            fontFamily: "Billabong",
+            fontSize: 60.0,
+          ),
+        ),
+      ],
     ),
   );
 }
@@ -36,4 +46,3 @@ Container languageSelection() {
     ),
   );
 }
-

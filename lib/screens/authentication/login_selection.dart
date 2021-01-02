@@ -33,7 +33,7 @@ class _LoginSelectionState extends State<LoginSelection> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      instaText(),
+                      instaText(context),
                       goToSignUp(),
                       goToSignIn(),
                     ],

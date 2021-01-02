@@ -6,8 +6,11 @@ class SystemThemeData {
       canvasColor: Colors.white,
       hintColor: Colors.grey,
       primaryColor: Colors.black,
+      primarySwatch: Colors.grey,
       highlightColor: Colors.transparent,
       accentColor: Colors.black,
+      disabledColor: Colors.black,
+      indicatorColor: Colors.black,
       appBarTheme: Theme.of(context).appBarTheme.copyWith(
             color: Colors.white,
             textTheme: Theme.of(context).textTheme.apply(
@@ -21,13 +24,11 @@ class SystemThemeData {
             color: Colors.black,
           ),
 
-      primarySwatch: Colors.purple,
+
       backgroundColor: Colors.purple,
-      indicatorColor: Colors.purple,
+      focusColor: Colors.black,
       buttonColor: Colors.purple,
       hoverColor: Colors.purple,
-      focusColor: Colors.purple,
-      disabledColor: Colors.purple,
       textSelectionColor: Colors.purple,
       cardColor: Colors.purple,
 
@@ -46,8 +47,11 @@ class SystemThemeData {
       canvasColor: Colors.black,
       hintColor: Colors.grey,
       primaryColor: Colors.white,
+      primarySwatch: Colors.grey,
       highlightColor: Colors.transparent,
       accentColor: Colors.white,
+      disabledColor: Colors.white,
+      indicatorColor: Colors.white,
       appBarTheme: Theme.of(context).appBarTheme.copyWith(
             color: Colors.black,
             textTheme: Theme.of(context).textTheme.apply(
@@ -61,14 +65,12 @@ class SystemThemeData {
             color: Colors.white,
           ),
 
-      primarySwatch: Colors.red,
-      backgroundColor: Colors.red,
-      indicatorColor: Colors.red,
-      buttonColor: Colors.red,
-      hoverColor: Colors.red,
-      focusColor: Colors.red,
-      disabledColor: Colors.red,
+
+      backgroundColor: Colors.purple,
+      buttonColor: Colors.purple,
+      hoverColor: Colors.purple,
       textSelectionColor: Colors.red,
+      focusColor: Colors.red,
       cardColor: Colors.red,
 
       // accentColorBrightness: Brightness.light,
