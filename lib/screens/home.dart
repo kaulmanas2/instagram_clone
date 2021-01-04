@@ -43,11 +43,12 @@ class _HomePageState extends State<HomePage> {
           dataSnapshot = snapshot.data;
 
           userData = UserData(
-              dataSnapshot.data()["username"] ?? "",
-              dataSnapshot.data()["profile_pic"] ?? "",
-              dataSnapshot.data()["bio"] ?? "",
-              dataSnapshot.data()["followers"] ?? [],
-              dataSnapshot.data()["following"] ?? []);
+            username: dataSnapshot.data()["username"] ?? "",
+            profile_pic: dataSnapshot.data()["profile_pic"] ?? "",
+            bio: dataSnapshot.data()["bio"] ?? "",
+            followers: dataSnapshot.data()["followers"] ?? [],
+            following: dataSnapshot.data()["following"] ?? []
+          );
 
           print("DATA ====> got data from snapshot <==== DATA");
 

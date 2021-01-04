@@ -1,76 +1,46 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:instagram_clone/mock_data/mock_data.dart';
 import 'package:instagram_clone/models/posts.dart';
 import 'package:instagram_clone/models/user.dart';
-import 'package:instagram_clone/screens/profile/list_posts.dart';
-import 'package:instagram_clone/services/auth.dart';
 import 'package:instagram_clone/shared/loading.dart';
 
-class HomeFeed extends StatefulWidget {
+class ListPosts extends StatefulWidget {
+  final UserData userData;
+  final List<dynamic> postsList;
+
+  ListPosts({this.userData, this.postsList});
+
   @override
-  _HomeFeedState createState() => _HomeFeedState();
+  _ListPostsState createState() => _ListPostsState();
 }
 
-class _HomeFeedState extends State<HomeFeed> {
-  final AuthenticationService _authService = AuthenticationService();
-
+class _ListPostsState extends State<ListPosts> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Container(
-          padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 5.0),
-          child: Text(
-            "Instagram Clone",
-            style: TextStyle(
-              fontFamily: "Billabong",
-              fontSize: 30.0,
-            ),
-          ),
-        ),
-        // backgroundColor: Theme.of(context).primaryColor,
-        elevation: 1.0,
-        actions: [
-          IconButton(
-            icon: Icon(
-              AntDesign.search1,
-              color: Theme.of(context).iconTheme.color,
-              size: 30.0,
-            ),
-            onPressed: () => print("search button"),
-          ),
-          IconButton(
-            icon: Icon(
-              Feather.send,
-              color: Theme.of(context).iconTheme.color,
-              size: 30.0,
-            ),
-            onPressed: () => print("inbox button"),
-          ),
-        ],
-      ),
-      body: Container(
-        child: ListView.builder(
-          itemCount: homeFeedUserData.length,
-          itemBuilder: (context, index) {
-            return Column(
-              children: [
-                listPostsTop(context, index, homeFeedUserData, homeFeedPostsData),
-                listPostsMid(context, index, homeFeedUserData, homeFeedPostsData),
-                listPostsBottom(context, index, homeFeedUserData, homeFeedPostsData),
-              ],
-            );
-          },
-        ),
+    var userData = widget.userData;
+    var postList = widget.postsList;
+
+    return Container(
+      child: ListView.builder(
+        itemCount: postList.length,
+        itemBuilder: (context, index) {
+          return Column(
+            children: [
+              listPostsTop(context, index, userData, postList),
+              listPostsMid(context, index, userData, postList),
+              listPostsBottom(context, index, userData, postList),
+            ],
+          );
+        },
       ),
     );
   }
 }
 
 Container listPostsTop(
-    BuildContext context, int index, List<UserData> userData, List<Posts> postsList) {
+    BuildContext context, int index, UserData userData, List<Posts> postsList) {
   return Container(
     padding: EdgeInsets.fromLTRB(15.0, 0.0, 10.0, 0.0),
     child: Row(
@@ -79,7 +49,7 @@ Container listPostsTop(
         Row(
           children: [
             CachedNetworkImage(
-              imageUrl: userData[index].profile_pic,
+              imageUrl: userData.profile_pic,
               imageBuilder: (context, imageProvider) => CircleAvatar(
                 backgroundImage: imageProvider,
                 radius: 15.0,
@@ -99,7 +69,7 @@ Container listPostsTop(
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 15.0),
                   child: Text(
-                    userData[index].username,
+                    userData.username,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
@@ -108,9 +78,9 @@ Container listPostsTop(
                 postsList[index].location == ""
                     ? Container()
                     : Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Text(postsList[index].location),
-                ),
+                        padding: EdgeInsets.symmetric(horizontal: 15.0),
+                        child: Text(postsList[index].location),
+                      ),
               ],
             ),
           ],
@@ -127,7 +97,7 @@ Container listPostsTop(
 }
 
 Container listPostsMid(
-    BuildContext context, int index, List<UserData> userData, List<Posts> postsList) {
+    BuildContext context, int index, UserData userData, List<Posts> postsList) {
   if (postsList.isEmpty) {
     return Container(child: Loading());
   } else {
@@ -160,7 +130,7 @@ Container listPostsMid(
 }
 
 Container listPostsBottom(
-    BuildContext context, int index, List<UserData> userData, List<Posts> postsList) {
+    BuildContext context, int index, UserData userData, List<Posts> postsList) {
   return Container(
     child: Column(
       children: [
@@ -204,24 +174,24 @@ Container listPostsBottom(
         postsList[index].caption == ""
             ? Container()
             : Container(
-          padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 5.0),
-          alignment: Alignment.centerLeft,
-          child: RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: "${userData[index].username} ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 5.0),
+                alignment: Alignment.centerLeft,
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "${userData.username} ",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextSpan(
+                        text: "${postsList[index].caption}",
+                      ),
+                    ],
                   ),
                 ),
-                TextSpan(
-                  text: "${postsList[index].caption}",
-                ),
-              ],
-            ),
-          ),
-        ),
+              ),
         Container(
           padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 15.0),
           alignment: Alignment.centerLeft,

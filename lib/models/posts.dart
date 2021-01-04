@@ -5,5 +5,11 @@ class Posts {
   String ownerID;
   DateTime timestamp;
 
-  Posts({this.downURL, this.caption, this.location, this.timestamp, this.ownerID});
+  Posts({
+    this.downURL,
+    this.caption,
+    this.location,
+    this.timestamp,
+    this.ownerID
+  });
 }

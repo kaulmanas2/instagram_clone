@@ -5,11 +5,11 @@ class UserData {
   List followers;
   List following;
 
-  UserData(
+  UserData({
     this.username,
     this.profile_pic,
     this.bio,
     this.followers,
     this.following
-  );
+    });
 }
