@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:instagram_clone/models/user.dart';
 import 'package:instagram_clone/services/auth.dart';
 import 'package:instagram_clone/services/database_service.dart';
 import 'package:instagram_clone/shared/loading.dart';
@@ -16,6 +17,7 @@ class EditProfile extends StatefulWidget {
 class _EditProfileState extends State<EditProfile> {
   final AuthenticationService _authService = AuthenticationService();
 
+  UserData userData;
   DocumentSnapshot dataSnapshot;
 
   File chosenProfileImage;
@@ -43,6 +45,15 @@ class _EditProfileState extends State<EditProfile> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             dataSnapshot = snapshot.data;
+
+            userData = UserData(
+                dataSnapshot.data()["username"] ?? "",
+                dataSnapshot.data()["profile_pic"] ?? "",
+                dataSnapshot.data()["bio"] ?? "",
+                dataSnapshot.data()["followers"] ?? [],
+                dataSnapshot.data()["following"] ?? []
+            );
+
             return Scaffold(
               appBar: AppBar(
                 leading: IconButton(
@@ -72,9 +83,8 @@ class _EditProfileState extends State<EditProfile> {
                     onPressed: isButtonEnabled
                         ? () async {
                             print("Change Name, Username, Bio");
-                            username =
-                                username ?? dataSnapshot.data()["username"];
-                            bio = bio ?? dataSnapshot.data()["bio"];
+                            username = username ?? userData.username;
+                            bio = bio ?? userData.bio;
                             setState(() => isButtonEnabled = false);
                             await _authService.setDisplayName(displayName);
                             await DatabaseService(uid: _authService.uid)
@@ -116,7 +126,7 @@ class _EditProfileState extends State<EditProfile> {
                 radius: 50.0,
               )
             : CachedNetworkImage(
-                imageUrl: dataSnapshot.data()["profile_pic"],
+                imageUrl: userData.profile_pic,
                 imageBuilder: (context, imageProvider) => CircleAvatar(
                   backgroundImage: imageProvider,
                   radius: 80.0,
@@ -274,7 +284,7 @@ class _EditProfileState extends State<EditProfile> {
       padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
       height: 70.0,
       child: TextFormField(
-        initialValue: dataSnapshot.data()["username"],
+        initialValue: userData.username,
         decoration: InputDecoration(
           labelText: "Username",
         ),
@@ -290,7 +300,7 @@ class _EditProfileState extends State<EditProfile> {
       padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
       height: 70.0,
       child: TextFormField(
-        initialValue: dataSnapshot.data()["bio"],
+        initialValue: userData.bio,
         decoration: InputDecoration(
           labelText: "Bio",
         ),

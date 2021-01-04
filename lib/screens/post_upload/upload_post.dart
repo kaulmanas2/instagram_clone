@@ -17,6 +17,9 @@ class _UploadPostState extends State<UploadPost> {
   String picCaption = "";
   String picLocation = "";
 
+  var _captionTextFormFieldController = TextEditingController();
+  var _locationTextFormFieldController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -32,6 +35,8 @@ class _UploadPostState extends State<UploadPost> {
                   chosenPostImage = null;
                   picLocation = "";
                   picCaption = "";
+                  _captionTextFormFieldController.clear();
+                  _locationTextFormFieldController.clear();
                 });
               }),
           title: Text("Upload new Post"),
@@ -80,8 +85,8 @@ class _UploadPostState extends State<UploadPost> {
                         alignment: Alignment.topCenter,
                         child: Image(
                           image: FileImage(chosenPostImage),
-                          height: 300.0,
-                          width: 300.0,
+                          height: MediaQuery.of(context).size.width,
+                          width: MediaQuery.of(context).size.width,
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -91,6 +96,7 @@ class _UploadPostState extends State<UploadPost> {
                     vertical: 5.0,
                   ),
                   child: TextFormField(
+                    controller: _captionTextFormFieldController,
                     decoration: InputDecoration(
                       prefixIcon: Icon(
                         Icons.edit,
@@ -108,6 +114,7 @@ class _UploadPostState extends State<UploadPost> {
                     vertical: 5.0,
                   ),
                   child: TextFormField(
+                    controller: _locationTextFormFieldController,
                     decoration: InputDecoration(
                       prefixIcon: Icon(
                         Icons.location_on_outlined,

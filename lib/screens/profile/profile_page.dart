@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:instagram_clone/models/posts.dart';
+import 'package:instagram_clone/models/user.dart';
 import 'package:instagram_clone/screens/profile/edit_profile.dart';
 import 'package:instagram_clone/services/auth.dart';
 import 'package:instagram_clone/services/database_service.dart';
@@ -20,98 +21,106 @@ class _ProfilePageState extends State<ProfilePage> {
 
   bool isGridActive = true;
 
-  DocumentSnapshot personalUserDataSnapshot;
+  UserData userData;
+  DocumentSnapshot dataSnapshot;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
-        stream: DatabaseService(uid: _authService.uid).personalUserData,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            personalUserDataSnapshot = snapshot.data;
-            return Scaffold(
-              appBar: AppBar(
-                leading: Icon(
-                  Feather.lock,
-                  size: 20.0,
-                ),
-                title: Text(
-                  personalUserDataSnapshot.data()["username"] ?? "error",
-                ),
-                elevation: 1.0,
+      stream: DatabaseService(uid: _authService.uid).personalUserData,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          dataSnapshot = snapshot.data;
+
+          userData = UserData(
+              dataSnapshot.data()["username"] ?? "",
+              dataSnapshot.data()["profile_pic"] ?? "",
+              dataSnapshot.data()["bio"] ?? "",
+              dataSnapshot.data()["followers"] ?? [],
+              dataSnapshot.data()["following"] ?? []
+          );
+
+          return Scaffold(
+            appBar: AppBar(
+              leading: Icon(
+                Feather.lock,
+                size: 20.0,
               ),
-              endDrawer: Drawer(
-                child: Container(
-                  // color: Colors.white,
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: [
-                      Container(
-                        height: 65.0,
-                        child: DrawerHeader(
-                          child: Text(
-                            personalUserDataSnapshot.data()["username"] ??
-                                "error",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
+              title: Text(userData.username ?? "error"),
+              elevation: 1.0,
+            ),
+            endDrawer: Drawer(
+              child: Container(
+                // color: Colors.white,
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    Container(
+                      height: 65.0,
+                      child: DrawerHeader(
+                        child: Text(
+                          userData.username ?? "error",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      ListTile(
-                        title: Text("Log out"),
-                        onTap: () async {
-                          dynamic result = await _authService.signOut();
-                          if (result == null) {
-                            print("Error in logging out");
-                          }
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  ),
+                    ),
+                    ListTile(
+                      title: Text("Log out"),
+                      onTap: () async {
+                        dynamic result = await _authService.signOut();
+                        if (result == null) {
+                          print("Error in logging out");
+                        }
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
                 ),
               ),
-              body: NestedScrollView(
-                headerSliverBuilder: (context, value) => [
-                  SliverToBoxAdapter(
-                    child: Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              profilePicture(),
-                              socialDetails(),
-                            ],
-                          ),
-                          userDisplayName(),
-                          userBio(),
-                          editProfileButton(),
-                        ],
-                      ),
+            ),
+            body: NestedScrollView(
+              headerSliverBuilder: (context, value) => [
+                SliverToBoxAdapter(
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            profilePicture(),
+                            socialDetails(),
+                          ],
+                        ),
+                        userDisplayName(),
+                        userBio(),
+                        editProfileButton(),
+                      ],
                     ),
                   ),
-                ],
+                ),
+              ],
 
-                // use this to make UI look exactly like original instagram app
-                // body: tabBarView(),
+              // use this to make UI look exactly like original instagram app
+              // body: tabBarView(),
 
-                body: postsTabBarView(),
-              ),
-            );
-          } else {
-            return Loading();
-          }
-        });
+              body: postsTabBarView(),
+            ),
+          );
+        } else {
+          return Loading();
+        }
+      },
+    );
   }
 
   Container profilePicture() {
     return Container(
       padding: EdgeInsets.all(25.0),
       child: CachedNetworkImage(
-        imageUrl: personalUserDataSnapshot.data()["profile_pic"],
+        imageUrl: userData.profile_pic,
         imageBuilder: (context, imageProvider) => CircleAvatar(
           backgroundImage: imageProvider,
           radius: 40.0,
@@ -174,7 +183,7 @@ class _ProfilePageState extends State<ProfilePage> {
             vertical: 5.0,
           ),
           child: Text(
-            "${personalUserDataSnapshot.data()["followers"].length}",
+            "${userData.followers.length}",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20.0,
@@ -198,7 +207,7 @@ class _ProfilePageState extends State<ProfilePage> {
             vertical: 5.0,
           ),
           child: Text(
-            "${personalUserDataSnapshot.data()["following"].length}",
+            "${userData.following.length}",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20.0,
@@ -231,14 +240,13 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Container userBio() {
-    if (personalUserDataSnapshot.data()["bio"] == null ||
-        personalUserDataSnapshot.data()["bio"] == "") {
+    if (userData.bio == null || userData.bio == "") {
       return Container();
     } else {
       return Container(
         padding: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 0.0),
         child: Text(
-          personalUserDataSnapshot.data()["bio"] ?? "",
+          userData.bio ?? "",
         ),
       );
     }
@@ -381,7 +389,7 @@ class _ProfilePageState extends State<ProfilePage> {
           Row(
             children: [
               CachedNetworkImage(
-                imageUrl: personalUserDataSnapshot.data()["profile_pic"],
+                imageUrl: userData.profile_pic,
                 imageBuilder: (context, imageProvider) => CircleAvatar(
                   backgroundImage: imageProvider,
                   radius: 15.0,
@@ -398,11 +406,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 15.0),
                     child: Text(
-                      personalUserDataSnapshot.data()["username"],
+                      userData.username,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),

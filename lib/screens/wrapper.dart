@@ -11,7 +11,6 @@ import 'package:provider/provider.dart';
 class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     final _auth = AuthenticationService();
 
     final user = Provider.of<User>(context);
@@ -23,15 +22,13 @@ class Wrapper extends StatelessWidget {
           StreamProvider<DocumentSnapshot>.value(
             value: DatabaseService(uid: _auth.uid).personalUserData,
           ),
-
           StreamProvider<List<Posts>>.value(
-            value: DatabaseService(uid: _auth.uid).userPostsNew,
+            value: DatabaseService(uid: _auth.uid).userPosts,
           ),
         ],
         child: HomePage(),
       );
-    }
-    else {
+    } else {
       print("Data for the user changed => $user");
       return LoginSelection();
     }

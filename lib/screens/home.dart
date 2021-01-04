@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:instagram_clone/models/user.dart';
 import 'package:instagram_clone/screens/home/home_feed.dart';
 import 'package:instagram_clone/screens/post_upload/upload_post.dart';
 import 'package:instagram_clone/screens/profile/profile_page.dart';
@@ -17,17 +18,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final AuthenticationService _authService = AuthenticationService();
   GlobalKey bottomNavBarKey = GlobalKey();
+
+  UserData userData;
   DocumentSnapshot dataSnapshot;
 
   int currentIndex = 0;
-  int _currentPage = 0;
 
   var tabBarContent = <Widget>[
     HomeFeed(),
     Text('Index 1: Reels'),
     UploadPost(),
     Text('Index 3: Likes'),
-    ProfilePage(), // Text('Index 4: Profile'),
+    ProfilePage(),
   ];
 
   // TODO: can use Provider -> value notifier to switch Bottom Navigation Page after post upload is complete
@@ -36,8 +38,19 @@ class _HomePageState extends State<HomePage> {
     return StreamBuilder<DocumentSnapshot>(
       stream: DatabaseService(uid: _authService.uid).personalUserData,
       builder: (context, snapshot) {
+        print("Stream Error ======> ${snapshot.error}");
         if (snapshot.hasData) {
           dataSnapshot = snapshot.data;
+
+          userData = UserData(
+              dataSnapshot.data()["username"] ?? "",
+              dataSnapshot.data()["profile_pic"] ?? "",
+              dataSnapshot.data()["bio"] ?? "",
+              dataSnapshot.data()["followers"] ?? [],
+              dataSnapshot.data()["following"] ?? []);
+
+          print("DATA ====> got data from snapshot <==== DATA");
+
           return SafeArea(
             child: Scaffold(
               body: Container(
@@ -45,7 +58,6 @@ class _HomePageState extends State<HomePage> {
               ),
               bottomNavigationBar: BottomNavigationBar(
                 key: bottomNavBarKey,
-                // backgroundColor: Colors.white,
                 currentIndex: currentIndex,
                 items: [
                   BottomNavigationBarItem(
@@ -75,22 +87,35 @@ class _HomePageState extends State<HomePage> {
                     label: "Likes",
                   ),
                   BottomNavigationBarItem(
-                    icon: CachedNetworkImage(
-                      imageUrl: dataSnapshot.data()["profile_pic"],
-                      imageBuilder: (context, imageProvider) => CircleAvatar(
-                        backgroundImage: imageProvider,
-                        radius: 15.0,
-                      ),
-                      placeholder: (context, url) => CircleAvatar(
-                        backgroundImage:
-                            AssetImage("assets/images/no_profile_pic.png"),
-                        radius: 15.0,
-                      ),
-                      errorWidget: (context, url, error) => CircleAvatar(
-                        backgroundImage:
-                            AssetImage("assets/images/no_profile_pic.png"),
-                        radius: 15.0,
-                      ),
+                    icon: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Icon(
+                          Icons.circle,
+                          size: 40,
+                          color: currentIndex == 4
+                              ? Theme.of(context).primaryColor
+                              : Theme.of(context).canvasColor,
+                        ),
+                        CachedNetworkImage(
+                          imageUrl: userData.profile_pic,
+                          imageBuilder: (context, imageProvider) =>
+                              CircleAvatar(
+                            backgroundImage: imageProvider,
+                            radius: 15.0,
+                          ),
+                          placeholder: (context, url) => CircleAvatar(
+                            backgroundImage:
+                                AssetImage("assets/images/no_profile_pic.png"),
+                            radius: 15.0,
+                          ),
+                          errorWidget: (context, url, error) => CircleAvatar(
+                            backgroundImage:
+                                AssetImage("assets/images/no_profile_pic.png"),
+                            radius: 15.0,
+                          ),
+                        ),
+                      ],
                     ),
                     label: "Profile",
                   ),
@@ -102,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                 onTap: (index) {
                   setState(() {
                     currentIndex = index;
-                    _currentPage = index;
+                    // _currentPage = index;
                   });
                 },
               ),
