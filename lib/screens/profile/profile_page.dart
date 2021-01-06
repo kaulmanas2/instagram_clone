@@ -318,11 +318,11 @@ class _ProfilePageState extends State<ProfilePage> {
           Expanded(
             child: isGridActive
                 ? GridPosts(
-                    postsList: postsList.reversed.toList(),
+                    postsList: postsList,
                   )
                 : ListPosts(
                     userData: userData,
-                    postsList: postsList.reversed.toList(),
+                    postsList: postsList,
                   ),
           ),
         ],

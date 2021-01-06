@@ -24,13 +24,9 @@ class _HomePageState extends State<HomePage> {
 
   int currentIndex = 0;
 
-  var tabBarContent = <Widget>[
-    HomeFeed(),
-    Text('Index 1: Reels'),
-    UploadPost(),
-    Text('Index 3: Likes'),
-    ProfilePage(),
-  ];
+  // var tabBarContent = <Widget>[
+  //
+  // ];
 
   // TODO: can use Provider -> value notifier to switch Bottom Navigation Page after post upload is complete
   @override
@@ -43,17 +39,19 @@ class _HomePageState extends State<HomePage> {
           dataSnapshot = snapshot.data;
 
           userData = UserData(
-            username: dataSnapshot.data()["username"] ?? "",
-            profile_pic: dataSnapshot.data()["profile_pic"] ?? "",
-            bio: dataSnapshot.data()["bio"] ?? "",
-            followers: dataSnapshot.data()["followers"] ?? [],
-            following: dataSnapshot.data()["following"] ?? []
-          );
+              username: dataSnapshot.data()["username"] ?? "",
+              profile_pic: dataSnapshot.data()["profile_pic"] ?? "",
+              bio: dataSnapshot.data()["bio"] ?? "",
+              followers: dataSnapshot.data()["followers"] ?? [],
+              following: dataSnapshot.data()["following"] ?? []);
 
           print("DATA ====> got data from snapshot <==== DATA");
 
           return SafeArea(
             child: Scaffold(
+              body: navBarBody(),
+              bottomNavigationBar: navBarFooter(),
+              /*
               body: Container(
                 child: tabBarContent[currentIndex],
               ),
@@ -62,62 +60,23 @@ class _HomePageState extends State<HomePage> {
                 currentIndex: currentIndex,
                 items: [
                   BottomNavigationBarItem(
-                    icon: Icon(
-                      AntDesign.home,
-                      size: 25.0,
-                    ),
+                    icon:
                     label: "Home",
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.video_collection_outlined,
-                    ),
+                    icon:
                     label: "Reels",
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(
-                      Ionicons.ios_add_circle_outline,
-                      size: 30.0,
-                    ),
+                    icon: ,
                     label: "Upload",
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(
-                      AntDesign.hearto,
-                    ),
+                    icon: ,
                     label: "Likes",
                   ),
                   BottomNavigationBarItem(
-                    icon: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Icon(
-                          Icons.circle,
-                          size: 40,
-                          color: currentIndex == 4
-                              ? Theme.of(context).primaryColor
-                              : Theme.of(context).canvasColor,
-                        ),
-                        CachedNetworkImage(
-                          imageUrl: userData.profile_pic,
-                          imageBuilder: (context, imageProvider) =>
-                              CircleAvatar(
-                            backgroundImage: imageProvider,
-                            radius: 15.0,
-                          ),
-                          placeholder: (context, url) => CircleAvatar(
-                            backgroundImage:
-                                AssetImage("assets/images/no_profile_pic.png"),
-                            radius: 15.0,
-                          ),
-                          errorWidget: (context, url, error) => CircleAvatar(
-                            backgroundImage:
-                                AssetImage("assets/images/no_profile_pic.png"),
-                            radius: 15.0,
-                          ),
-                        ),
-                      ],
-                    ),
+                    icon: ,
                     label: "Profile",
                   ),
                 ],
@@ -132,6 +91,7 @@ class _HomePageState extends State<HomePage> {
                   });
                 },
               ),
+              */
             ),
           );
         } else {
@@ -139,5 +99,94 @@ class _HomePageState extends State<HomePage> {
         }
       },
     );
+  }
+
+  Widget navBarBody() {
+    return IndexedStack(
+      index: currentIndex,
+      children: [
+        HomeFeed(),
+        Center(child: Text('Reels feature is under development')),
+        UploadPost(),
+        Center(child: Text('Likes feature is under development')),
+        ProfilePage(),
+      ],
+    );
+  }
+
+  Widget navBarFooter() {
+    return Container(
+      width: double.infinity,
+      height: 55.0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          InkWell(
+            onTap: () => changePage(0),
+            child: Icon(
+              AntDesign.home,
+              size: 25.0,
+            ),
+          ),
+          InkWell(
+            onTap: () => changePage(1),
+            child: Icon(
+              Icons.video_collection_outlined,
+            ),
+          ),
+          InkWell(
+            onTap: () => changePage(2),
+            child: Icon(
+              Ionicons.ios_add_circle_outline,
+              size: 30.0,
+            ),
+          ),
+          InkWell(
+            onTap: () => changePage(3),
+            child: Icon(
+              AntDesign.hearto,
+            ),
+          ),
+          InkWell(
+            onTap: () => changePage(4),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Icon(
+                  Icons.circle,
+                  size: 40,
+                  color: currentIndex == 4
+                      ? Theme.of(context).primaryColor
+                      : Theme.of(context).canvasColor,
+                ),
+                CachedNetworkImage(
+                  imageUrl: userData.profile_pic,
+                  imageBuilder: (context, imageProvider) => CircleAvatar(
+                    backgroundImage: imageProvider,
+                    radius: 15.0,
+                  ),
+                  placeholder: (context, url) => CircleAvatar(
+                    backgroundImage:
+                        AssetImage("assets/images/no_profile_pic.png"),
+                    radius: 15.0,
+                  ),
+                  errorWidget: (context, url, error) => CircleAvatar(
+                    backgroundImage:
+                        AssetImage("assets/images/no_profile_pic.png"),
+                    radius: 15.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  changePage(int index) {
+    setState(() {
+      currentIndex = index;
+    });
   }
 }

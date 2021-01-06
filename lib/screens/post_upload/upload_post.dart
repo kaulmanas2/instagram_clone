@@ -58,6 +58,8 @@ class _UploadPostState extends State<UploadPost> {
                       chosenPostImage = null;
                       picLocation = "";
                       picCaption = "";
+                      _captionTextFormFieldController.clear();
+                      _locationTextFormFieldController.clear();
                     });
                   }
                 }
